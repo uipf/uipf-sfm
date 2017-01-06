@@ -21,6 +21,6 @@ add_subdirectory(src/point-descriptors)
 
 
 install(DIRECTORY ${uipf-sfm_SOURCE_DIR}/src/data
-		DESTINATION include/uipf-sfm/data
+		DESTINATION include/uipf-sfm
 		FILES_MATCHING PATTERN "*.hpp"
 )
