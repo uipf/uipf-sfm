@@ -16,6 +16,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 
 
 # Point detectors
+add_subdirectory(src/converters)
 add_subdirectory(src/point-detectors)
 add_subdirectory(src/point-descriptors)
 

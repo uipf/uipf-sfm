@@ -2,6 +2,7 @@
 #define UIPFSFM_DATA_SFMIMAGE_HPP
 
 #include <uipf/data.hpp>
+#include <uipf/data/list.hpp>
 #include "KeyPointList.hpp"
 
 // TODO check if external 'C' is needed here
@@ -15,7 +16,6 @@ namespace uipfsfm {
 			KeyPointList::ptr keypoints;
 
 		UIPF_DATA_TYPE_END
-
 	}
 }
 
