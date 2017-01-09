@@ -1,7 +1,5 @@
 project(uipf-sfm-point-descriptors)
 
-set(CMAKE_CXX_STANDARD 11)
-
 #
 # Point detectors
 #
