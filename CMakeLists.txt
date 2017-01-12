@@ -19,6 +19,10 @@ if(UNIX)
 	endif()
 endif()
 
+message("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+message("CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
+message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+
 # find libuipf-module
 # search in normal system paths as well as installation prefix for installation as unprivileged user.
 find_library(
