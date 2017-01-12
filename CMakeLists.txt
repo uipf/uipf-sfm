@@ -8,6 +8,17 @@ else()
 	set(CMAKE_CXX_STANDARD 11)
 endif()
 
+if(UNIX)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+	if(CMAKE_BUILD_TYPE MATCHES Debug)
+		# sanitize memory issues https://gcc.gnu.org/gcc-4.8/changes.html
+		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+	else()
+		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+	endif()
+endif()
+
 # find libuipf-module
 # search in normal system paths as well as installation prefix for installation as unprivileged user.
 find_library(
