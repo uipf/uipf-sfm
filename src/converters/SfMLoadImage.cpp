@@ -9,7 +9,8 @@
 		{"image", uipf::DataDescription(uipfsfm::data::Image::id(), "the loaded image.")}
 
 #define UIPF_MODULE_PARAMS \
-		{"filename", uipf::ParamDescription("file name of the file to load from.") }
+		{"filename", uipf::ParamDescription("file name of the file to load from.") }, \
+		{"focalLength", uipf::ParamDescription("optional annotate the image with focal length, if known.", true) }
 
 #include <uipf/Module.hpp>
 
@@ -17,6 +18,9 @@ void SfMLoadImage::run() {
 
 	using namespace uipfsfm::data;
 
-	std::string filename = getParam<std::string>("filename","");
-	setOutputData<Image>("image", new Image(filename));
+	std::string filename = getParam<std::string>("filename", "");
+	float focalLength = getParam<float>("focalLength", -1);
+	Image::ptr image = Image::ptr(new Image(filename));
+	image->focalLength = focalLength;
+	setOutputData<Image>("image", image);
 }

@@ -4,7 +4,7 @@ project(uipf-sfm-converters)
 # Point detectors
 #
 
-add_library(SfMOpenCVMat2ImageModule SHARED OpenCVMat2SfMImage.cpp)
+add_library(SfMOpenCVMat2ImageModule SHARED SfMOpenCVMat2SfMImage.cpp)
 target_link_libraries(SfMOpenCVMat2ImageModule ${ModuleBase}) # opencv_core opencv_highgui
 
 add_library(SfMImage2OpenCVMatModule SHARED SfMImage2OpenCVMat.cpp)

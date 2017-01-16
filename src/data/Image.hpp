@@ -13,7 +13,20 @@ namespace uipfsfm {
 		UIPF_DATA_TYPE_BEGIN (Image, "cebe.sfm.data.image", std::string)
 
 		public:
+
+			float focalLength = -1;
+
+
 			KeyPointList::ptr keypoints;
+
+
+			// TODO width height, focal length
+
+			/**
+			 *
+			 */
+			std::map<std::string, std::string> tags;
+			std::map<std::string, Data::ptr> data;
 
 		UIPF_DATA_TYPE_END
 	}

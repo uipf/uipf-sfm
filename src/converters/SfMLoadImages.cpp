@@ -12,7 +12,8 @@
 		{"images", uipf::DataDescription(uipf::data::List::id(/*TODO typed list*/), "the loaded images.")}
 
 #define UIPF_MODULE_PARAMS \
-		{"path", uipf::ParamDescription("file name of the path to load from.") }
+		{"path", uipf::ParamDescription("file name of the path to load from.") }, \
+		{"focalLength", uipf::ParamDescription("optional annotate the image with focal length, if known.", true) }
 
 #include <uipf/Module.hpp>
 
@@ -25,10 +26,13 @@ void SfMLoadImages::run() {
 	List::ptr list;
 
 	string path = getParam<string>("path","");
+	float focalLength = getParam<float>("focalLength", -1);
 
 	vector<string> images = uipf::data::load_image_names(path);
 	for(string img: images) {
-		list->getContent().push_back(Image::ptr(new Image(img)));
+		Image::ptr image = Image::ptr(new Image(img));
+		image->focalLength = focalLength;
+		list->getContent().push_back(image);
 	}
 	setOutputData<List>("images", list);
 }

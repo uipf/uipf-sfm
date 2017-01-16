@@ -8,7 +8,7 @@
 
 #define UIPF_MODULE_NAME "OpenCVMat2SfMImage"
 #define UIPF_MODULE_ID "cebe.sfm.converters.OpenCVMat2SfMImage"
-#define UIPF_MODULE_CLASS OpenCVMat2SfMImage
+#define UIPF_MODULE_CLASS SfMOpenCVMat2SfMImage
 #define UIPF_MODULE_CATEGORY "sfm.converters"
 
 #define UIPF_MODULE_INPUTS \
@@ -17,16 +17,23 @@
 #define UIPF_MODULE_OUTPUTS \
 		{"image", uipf::DataDescription(uipfsfm::data::Image::id(), "the image with annotated keypoints.")}
 
+#define UIPF_MODULE_PARAMS \
+		{"focalLength", uipf::ParamDescription("optional annotate the image with focal length, if known.", true) }
+
+
 #include <uipf/Module.hpp>
 
 using namespace uipf;
 using namespace uipf::data;
 using namespace uipfsfm::data;
 
-void OpenCVMat2SfMImage::run() {
+void SfMOpenCVMat2SfMImage::run() {
+
+	float focalLength = getParam<float>("focalLength", -1);
 
 	OpenCVMat::ptr image = getInputData<OpenCVMat>("image");
 	Image::ptr sfmImage(new Image(image->filename));
+	sfmImage->focalLength = focalLength;
 	setOutputData<Image>("image", sfmImage);
 
 }
