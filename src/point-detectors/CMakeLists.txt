@@ -16,11 +16,15 @@ target_link_libraries(FoerstnerModule ${ModuleBase} opencv_core opencv_highgui)
 add_library(ViewKeyPointsModule SHARED ViewKeyPointsModule.cpp)
 target_link_libraries(ViewKeyPointsModule ${ModuleBase} opencv_core opencv_highgui opencv_imgproc opencv_features2d)
 
+add_library(ViewImageGraphModule SHARED ViewImageGraphModule.cpp)
+target_link_libraries(ViewImageGraphModule ${ModuleBase} opencv_core opencv_highgui opencv_imgproc opencv_features2d)
+
 # installation targets
 install(TARGETS
 		SiftDetectorModule
 		FoerstnerModule
 		ViewKeyPointsModule
+		ViewImageGraphModule
 
 		LIBRARY DESTINATION lib/uipf
 		ARCHIVE DESTINATION lib/uipf

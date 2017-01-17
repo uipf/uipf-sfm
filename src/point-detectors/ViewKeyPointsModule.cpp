@@ -13,10 +13,15 @@
 #define UIPF_MODULE_INPUTS \
 		{"image", uipf::DataDescription(uipfsfm::data::Image::id(), "the input image annotated with keypoints.")}
 
+#define UIPF_MODULE_PARAMS \
+		{"store", uipf::ParamDescription("Whether to store the visualization instead of showing them. Defaults to show.", true)}
+
+
 #include <uipf/Module.hpp>
 
 using namespace uipf;
 using namespace uipf::data;
+using namespace uipf::util;
 using namespace uipfsfm::data;
 
 // Function displays image (after proper normalization)
@@ -25,23 +30,25 @@ win   :  Window name
 img   :  Image that shall be displayed
 cut   :  whether to cut or scale values outside of [0,255] range
 */
-void showImage(cv::Mat& img, const char* win, int wait, bool show, bool save){
+void showImage(cv::Mat& img, bool show, bool save = false, const std::string& filename = std::string() ) {
 
 	cv::Mat aux = img.clone();
 
 	// scale and convert
-	if (img.channels() == 1)
+	if (img.channels() == 1) {
 		normalize(aux, aux, 0, 255, CV_MINMAX);
+	}
 	aux.convertTo(aux, CV_8UC1);
 	// show
 	if (show){
-		cv::namedWindow(win, CV_WINDOW_NORMAL);
-		imshow(win, aux);
-		cv::waitKey(wait);
+		cv::namedWindow("keypoints", CV_WINDOW_NORMAL);
+		imshow("keypoints", aux);
+		cv::waitKey(0);
 	}
 	// save
-	if (save)
-		imwrite( (std::string(win)+std::string(".png")).c_str(), aux);
+	if (save) {
+		imwrite(filename.c_str(), aux);
+	}
 }
 
 
@@ -57,9 +64,14 @@ void ViewKeyPointsModule::run() {
 	if (!img.data) {
 		throw ErrorException(std::string("failed to load file: ") + image->getContent());
 	}
+//	points->print(true);
 	cv::drawKeypoints(img, points->getContent(), img, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_OVER_OUTIMG + cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-	showImage(img, "keypoints", 0, true, false);
 
+	if (getParam<bool>("store", false)) {
+		showImage(img, false, true, rename_postfix(image->getContent(), "_keypoints"));
+	} else {
+		showImage(img, true);
+	}
 
 }
 
