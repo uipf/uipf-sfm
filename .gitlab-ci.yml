@@ -7,16 +7,12 @@ stages:
   - test
 
 
+# download uipf
 build-uipf:
   stage: prepare
   script:
-    - git clone uipf.git uipf
-    - cd uipf && git checkout improved-data-model
-    - cd ..
-    - if [ -d build-uipf/ ]; then rm -rf build-uipf/ ; fi
-    - mkdir build-uipf/ && cd build-uipf/
-    - cmake -DWITH_TESTS=OFF -DLIBUIPF_WITH_TESTS=OFF -DCMAKE_INSTALL_PREFIX=`pwd`/../prefix ../uipf/code
-    - make -j 4
+    - . <(curl -fsSL https://gitlab.cebe.cc/global/gitlab-ci-helpers/raw/master/get-last-successful-build-artifact.sh)
+    - PROJECT=master/uipf PRIVATE_TOKEN=privtoken STAGE=build-uipf-with-cv download_latest
   artifacts:
     paths:
     - prefix/
