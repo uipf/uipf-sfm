@@ -5,6 +5,8 @@
 #include <uipf/data/list.hpp>
 #include "KeyPointList.hpp"
 
+#include <opencv2/opencv.hpp>
+
 // TODO check if external 'C' is needed here
 
 namespace uipfsfm {
@@ -16,11 +18,21 @@ namespace uipfsfm {
 
 			float focalLength = -1;
 
+			// TODO width height, focal length
+
+
+			bool hasKeyPoints = false;
 
 			KeyPointList::ptr keypoints;
 
+			bool hasProjectionMatrix = false;
+			/**
+			 * Estimated 3x4 projection matrix for this image.
+			 */
+			cv::Matx34d P;
 
-			// TODO width height, focal length
+
+			// TODO PMVS supports image masks
 
 			/**
 			 *
