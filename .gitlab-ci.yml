@@ -10,7 +10,7 @@ stages:
 build-uipf:
   stage: prepare
   script:
-    - git clone git@gitlab.cebe.cc:master/uipf.git uipf
+    - git clone uipf.git uipf
     - cd uipf && git checkout improved-data-model
     - cd ..
     - if [ -d build-uipf/ ]; then rm -rf build-uipf/ ; fi
