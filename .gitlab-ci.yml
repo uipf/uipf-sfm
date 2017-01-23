@@ -11,9 +11,10 @@ stages:
 build-uipf:
   stage: prepare
   script:
-    - 'curl -fsSL -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" https://gitlab.cebe.cc/global/gitlab-ci-helpers/raw/master/get-last-successful-build-artifact.sh'
+#    - 'curl -fsSL -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" https://gitlab.cebe.cc/global/gitlab-ci-helpers/raw/master/get-last-successful-build-artifact.sh'
 #    - '. <(curl -fsSL -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" https://gitlab.cebe.cc/global/gitlab-ci-helpers/raw/master/get-last-successful-build-artifact.sh)'
 #    - PROJECT=master/uipf PRIVATE_TOKEN=privtoken STAGE=build-uipf-with-cv download_latest
+    - rsync -r /tmp/uipf-prefix/ prefix/
   artifacts:
     paths:
     - prefix/
