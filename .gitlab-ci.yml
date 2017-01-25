@@ -38,6 +38,8 @@ build-uipf-sfm:
 test:
   stage: test
   script:
+    # make sure libs can be found
+    - export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:`pwd`/prefix/lib"
     - ./prefix/bin/uipf -l
     # TODO grep for expected modules
   dependencies:
