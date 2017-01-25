@@ -29,6 +29,7 @@ build-uipf-sfm:
     - mkdir build/ && cd build/
     - cmake -DCMAKE_INSTALL_PREFIX=`pwd`/../prefix ..
     - make -j 4
+    - make install
   dependencies:
     - find-uipf
   artifacts:
