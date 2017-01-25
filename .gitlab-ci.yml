@@ -5,16 +5,18 @@ stages:
   - prepare
   - build
   - test
+  - deploy
 
 
 # download uipf
-build-uipf:
+find-uipf:
   stage: prepare
   script:
 #    - 'curl -fsSL -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" https://gitlab.cebe.cc/global/gitlab-ci-helpers/raw/master/get-last-successful-build-artifact.sh'
 #    - '. <(curl -fsSL -H "PRIVATE-TOKEN: ${PRIVATE_TOKEN}" https://gitlab.cebe.cc/global/gitlab-ci-helpers/raw/master/get-last-successful-build-artifact.sh)'
 #    - PROJECT=master/uipf PRIVATE_TOKEN=privtoken STAGE=build-uipf-with-cv download_latest
-    - rsync -r /tmp/uipf-prefix/ prefix/
+    - rsync -a /tmp/uipf-prefix/ prefix/
+    - find prefix/ |sort
   artifacts:
     paths:
     - prefix/
@@ -28,7 +30,10 @@ build-uipf-sfm:
     - cmake -DCMAKE_INSTALL_PREFIX=`pwd`/prefix ..
     - make -j 4
   dependencies:
-  - build-uipf
+    - find-uipf
+  artifacts:
+    paths:
+    - prefix/
 
 test:
   stage: test
@@ -37,6 +42,16 @@ test:
     # TODO grep for expected modules
   dependencies:
   - build-uipf-sfm
+
+deploy:
+  stage: deploy
+  script:
+    # temporary solution for sharing uipf artifacts
+    - rm -rf /tmp/uipf-sfm-prefix
+    - rsync -a prefix/ /tmp/uipf-sfm-prefix
+    - find /tmp/uipf-sfm-prefix |sort
+  dependencies:
+    - build-uipf-sfm
 
 
 variables:
