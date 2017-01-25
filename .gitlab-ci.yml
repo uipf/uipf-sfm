@@ -27,7 +27,7 @@ build-uipf-sfm:
   script:
     - if [ -d build/ ]; then rm -rf build/ ; fi
     - mkdir build/ && cd build/
-    - cmake -DCMAKE_INSTALL_PREFIX=`pwd`/prefix ..
+    - cmake -DCMAKE_INSTALL_PREFIX=`pwd`/../prefix ..
     - make -j 4
   dependencies:
     - find-uipf
