@@ -14,10 +14,10 @@ namespace uipfsfm {
 		UIPF_DATA_TYPE_BEGIN (ImageGraph, "cebe.sfm.data.image_graph", std::vector<ImagePair::ptr>) // TODO internal data type is not really needed
 
 		public:
-//			/**
-//			 * All images indexed by ID
-//			 */
-//			std::map<int, Image::ptr> images;
+			/**
+			 * All images indexed by ID
+			 */
+			std::map<std::string, Image::ptr> images;
 //
 //			/**
 //			 * edges
