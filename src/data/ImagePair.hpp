@@ -15,6 +15,7 @@ namespace uipfsfm {
 
 		public:
 
+			bool hasKeyPointMatches = false;
 			std::vector< std::pair<int, int> > keyPointMatches;
 
 			// TODO move this down to data?
