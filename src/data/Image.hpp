@@ -32,6 +32,25 @@ namespace uipfsfm {
 			cv::Matx34d P;
 
 
+			typedef struct {
+				// external parameters
+				double R[9];     /* Rotation */
+				double t[3];     /* Translation */
+
+				// internal parameters
+				double K[9];     /* Rotation */
+
+				double f;        /* Focal length */
+			} CameraParameters;
+			bool hasCameraParameters = false;
+			/**
+			 * Estimated 3x4 projection matrix for this image.
+			 */
+			CameraParameters camera;
+
+
+
+
 			// TODO PMVS supports image masks
 
 			/**
