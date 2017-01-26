@@ -31,7 +31,12 @@ void SfMLoadImages::run() {
 	vector<string> images = uipf::data::load_image_names(path);
 	for(string img: images) {
 		Image::ptr image = Image::ptr(new Image(img));
-		image->focalLength = focalLength;
+		image->camera.f = focalLength;
+
+		cv::Mat m = cv::imread(img);
+		image->height = m.rows;
+		image->width = m.cols;
+
 		list->getContent().push_back(image);
 	}
 	setOutputData<List>("images", list);

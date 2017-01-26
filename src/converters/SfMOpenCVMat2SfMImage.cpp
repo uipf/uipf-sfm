@@ -33,7 +33,11 @@ void SfMOpenCVMat2SfMImage::run() {
 
 	OpenCVMat::ptr image = getInputData<OpenCVMat>("image");
 	Image::ptr sfmImage(new Image(image->filename));
-	sfmImage->focalLength = focalLength;
+	sfmImage->camera.f = focalLength;
+
+	sfmImage->height = image->getContent().rows;
+	sfmImage->width = image->getContent().cols;
+
 	setOutputData<Image>("image", sfmImage);
 
 }

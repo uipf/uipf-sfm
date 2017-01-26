@@ -16,7 +16,8 @@ namespace uipfsfm {
 
 		public:
 
-			float focalLength = -1;
+			int width = -1;
+			int height = -1;
 
 			// TODO width height, focal length
 
@@ -38,7 +39,7 @@ namespace uipfsfm {
 				double t[3];     /* Translation */
 
 				// internal parameters
-				double K[9];     /* Rotation */
+				double K[9];     /* Internal */
 
 				double f;        /* Focal length */
 			} CameraParameters;
