@@ -2,6 +2,7 @@
 #include <uipf/logging.hpp>
 #include <uipf/data/opencv.hpp>
 #include <algorithm>
+#include <boost/filesystem.hpp>
 
 #include "data/KeyPointList.hpp"
 #include "data/Image.hpp"
@@ -17,7 +18,7 @@
 		{"imageGraph", uipf::DataDescription(uipfsfm::data::ImageGraph::id(), "the image graph to visualize.")}
 
 #define UIPF_MODULE_PARAMS \
-		{"store", uipf::ParamDescription("Whether to store the visualization instead of showing them. Defaults to show.", true)}
+		{"store", uipf::ParamDescription("Whether to store the visualization instead of showing them. This is the directory to store them in.", true)}
 
 
 #include <uipf/Module.hpp>
@@ -51,6 +52,8 @@ void showImage(cv::Mat& img, bool show, bool save = false, const std::string& fi
 
 
 void ViewImageGraphModule::run() {
+
+	namespace fs = boost::filesystem;
 
 	ImageGraph::ptr imageGraph = getInputData<ImageGraph>("imageGraph");
 
@@ -86,19 +89,21 @@ void ViewImageGraphModule::run() {
 
 		}
 
-
-
-		// TODO store viz
-//		if (getParam<bool>("store", false)) {
-//			showImage(img, false, true, rename_postfix(image->getContent(), "_keypoints"));
-//		} else {
-//			showImage(img, true);
-//		}
-
 		// TODO optional cv::drawKeypoints(img, points->getContent(), img, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_OVER_OUTIMG + cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
+		std::string store = getParam<std::string>("store", "");
+		if (!store.empty()) {
+			fs::path pstore(store);
+			if (!fs::exists(pstore)) {
+				fs::create_directories(pstore);
+			}
+			fs::path fileA = fs::path(imageA->getContent()).stem();
+			fs::path fileB = fs::path(imageB->getContent()).filename();
+			showImage(viz, false, true, (pstore / fs::path(std::string("match_") + fileA.string() + std::string("_") + fileB.string())).c_str());
+		} else {
+			showImage(viz, true);
+		}
 
-		showImage(viz, true);
 	}
 
 
