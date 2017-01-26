@@ -35,11 +35,11 @@ namespace uipfsfm {
 
 			typedef struct {
 				// external parameters
-				cv::Matx33d R[9];     /* Rotation */
-				cv::Matx31d t[3];     /* Translation */
+				cv::Matx33d R;     /* Rotation */
+				cv::Matx31d t;     /* Translation */
 
 				// internal parameters
-				cv::Matx33d K[9];     /* Internal */
+				cv::Matx33d K;     /* Internal */
 
 				double f;        /* Focal length */
 			} CameraParameters;
