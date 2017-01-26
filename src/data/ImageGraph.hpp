@@ -15,9 +15,9 @@ namespace uipfsfm {
 
 		public:
 			/**
-			 * All images indexed by ID
+			 * All images indexed by ID to define an ordering
 			 */
-			std::map<std::string, Image::ptr> images;
+			std::map<int, Image::ptr> images;
 //
 //			/**
 //			 * edges
@@ -30,7 +30,7 @@ namespace uipfsfm {
 			 *
 			 */
 			std::map<std::string, std::string> tags;
-			std::map<std::string, Data::ptr> data;
+			std::map<std::string, uipf::Data::ptr> data;
 
 		UIPF_DATA_TYPE_END
 	}
