@@ -36,7 +36,7 @@ namespace uipfsfm {
 			typedef struct {
 				// external parameters
 				cv::Matx33d R;     /* Rotation */
-				cv::Matx31d t;     /* Translation */
+				cv::Vec3d t;     /* Translation */
 
 				// internal parameters
 				cv::Matx33d K;     /* Internal */

@@ -55,6 +55,7 @@ void showImage(cv::Mat& img, bool show, bool save = false, const std::string& fi
 void ViewKeyPointsModule::run() {
 
 	Image::ptr image = getInputData<Image>("image");
+	assert(image->hasKeyPoints);
 	KeyPointList::ptr points = image->keypoints;
 
 	UIPF_LOG_INFO("Number of detected interest points: ", image->getContent(), " : ", points->getContent().size());
