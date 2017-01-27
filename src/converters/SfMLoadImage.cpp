@@ -13,7 +13,6 @@
 		{"focalLength", uipf::ParamDescription("optional annotate the image with focal length, if known.", true) }
 
 #include <uipf/Module.hpp>
-#include <data/Image.hpp>
 
 void SfMLoadImage::run() {
 

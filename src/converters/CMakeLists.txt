@@ -16,6 +16,9 @@ target_link_libraries(SfMLoadImageModule ${ModuleBase}) # opencv_core opencv_hig
 add_library(SfMLoadImagesModule SHARED SfMLoadImages.cpp)
 target_link_libraries(SfMLoadImagesModule ${ModuleBase}) # opencv_core opencv_highgui
 
+add_library(SfMCopyImage SHARED SfMCopyImage.cpp)
+target_link_libraries(SfMCopyImage ${ModuleBase}) # opencv_core opencv_highgui
+
 
 # installation targets
 install(TARGETS
@@ -23,6 +26,7 @@ install(TARGETS
 		SfMImage2OpenCVMatModule
 		SfMLoadImageModule
 		SfMLoadImagesModule
+		SfMCopyImage
 
 		LIBRARY DESTINATION lib/uipf
 		ARCHIVE DESTINATION lib/uipf

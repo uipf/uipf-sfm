@@ -16,6 +16,7 @@
 		{"focalLength", uipf::ParamDescription("optional annotate the image with focal length, if known.", true) }
 
 #include <uipf/Module.hpp>
+#include <uipf/logging.hpp>
 
 void SfMLoadImages::run() {
 
@@ -23,14 +24,15 @@ void SfMLoadImages::run() {
 	using namespace uipf::data;
 	using namespace uipfsfm::data;
 
-	List::ptr list;
+	List::ptr list(new List());
 
 	string path = getParam<string>("path","");
 	float focalLength = getParam<float>("focalLength", -1);
 
 	vector<string> images = uipf::data::load_image_names(path);
 	for(string img: images) {
-		Image::ptr image = Image::ptr(new Image(img));
+		UIPF_LOG_DEBUG("loading image: ", img);
+		Image::ptr image(new Image(img));
 		image->camera.f = focalLength;
 
 		cv::Mat m = cv::imread(img);
