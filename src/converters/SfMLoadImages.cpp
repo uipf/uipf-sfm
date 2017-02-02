@@ -36,10 +36,12 @@ void SfMLoadImages::run() {
 		image->camera.f = focalLength;
 
 		cv::Mat m = cv::imread(img);
-		image->height = m.rows;
-		image->width = m.cols;
+		if (m.data) {
+			image->height = m.rows;
+			image->width = m.cols;
 
-		list->getContent().push_back(image);
+			list->getContent().push_back(image);
+		}
 	}
 	setOutputData<List>("images", list);
 }
