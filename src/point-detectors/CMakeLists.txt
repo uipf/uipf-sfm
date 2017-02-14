@@ -24,10 +24,10 @@ target_link_libraries(FilterImageGraphModule ${ModuleBase} opencv_core opencv_hi
 
 # installation targets
 install(TARGETS
-		SiftDetectorModule
-		FoerstnerModule
-		ViewKeyPointsModule
-		ViewImageGraphModule
+#		SiftDetectorModule
+#		FoerstnerModule
+#		ViewKeyPointsModule
+#		ViewImageGraphModule
 		FilterImageGraphModule
 
 		LIBRARY DESTINATION lib/uipf

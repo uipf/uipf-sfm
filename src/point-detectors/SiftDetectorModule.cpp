@@ -11,7 +11,8 @@
 #define UIPF_MODULE_CATEGORY "sfm"
 
 #define UIPF_MODULE_INPUTS \
-		{"image", uipf::DataDescription(uipf::data::OpenCVMat::id(), "the input image.")}
+		{"sfmimage", uipf::DataDescription(uipfsfm::data::Image::id(), "the input image.", true)}, \
+		{"image", uipf::DataDescription(uipf::data::OpenCVMat::id(), "the input image.", true)}
 
 #define UIPF_MODULE_OUTPUTS \
 		{"image", uipf::DataDescription(uipfsfm::data::Image::id(), "the image with annotated keypoints.")}

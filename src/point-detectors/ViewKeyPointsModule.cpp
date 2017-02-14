@@ -21,7 +21,6 @@
 
 using namespace uipf;
 using namespace uipf::data;
-using namespace uipf::util;
 using namespace uipfsfm::data;
 
 // Function displays image (after proper normalization)
@@ -69,7 +68,7 @@ void ViewKeyPointsModule::run() {
 	cv::drawKeypoints(img, points->getContent(), img, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_OVER_OUTIMG + cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
 	if (getParam<bool>("store", false)) {
-		showImage(img, false, true, rename_postfix(image->getContent(), "_keypoints"));
+		showImage(img, false, true, uipf_rename_postfix(image->getContent(), "_keypoints"));
 	} else {
 		showImage(img, true);
 	}
