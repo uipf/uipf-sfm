@@ -7,6 +7,7 @@
 #include "KeyPointList.hpp"
 
 #include <opencv2/opencv.hpp>
+#include <sstream>
 
 // TODO check if external 'C' is needed here
 
@@ -58,6 +59,7 @@ namespace uipfsfm {
 				v.push_back("image");
 				if (hasKeyPoints) {
 					v.push_back("keypoints");
+					v.push_back("keypoints.txt");
 				}
 				return v;
 			};
@@ -74,6 +76,12 @@ namespace uipfsfm {
 					cv::drawKeypoints(m, keypoints->getContent(), m, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_OVER_OUTIMG + cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
 					context.displayImage(m);
+					return;
+				}
+				if (option.compare("keypoints.txt") == 0) {
+					std::ostringstream s;
+					keypoints->serialize(s);
+					context.displayText(s.str());
 					return;
 				}
 			};

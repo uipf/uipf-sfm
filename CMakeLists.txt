@@ -36,6 +36,8 @@ add_subdirectory(src/converters)
 add_subdirectory(src/point-detectors)
 add_subdirectory(src/point-descriptors)
 
+add_subdirectory(tests)
+
 
 install(DIRECTORY ${uipf-sfm_SOURCE_DIR}/src/data
 		DESTINATION include/uipf-sfm

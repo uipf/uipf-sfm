@@ -14,6 +14,16 @@ namespace uipfsfm {
 		UIPF_DATA_TYPE_BEGIN (ImageGraph, "cebe.sfm.data.image_graph", std::vector<ImagePair::ptr>) // TODO internal data type is not really needed
 
 		public:
+			virtual bool isList() { return true; };
+			virtual std::vector<uipf::Data::ptr> getListContent() {
+				std::vector<uipf::Data::ptr> list;
+				for(ImagePair::ptr ip: data_) {
+					list.push_back(std::static_pointer_cast<uipf::Data>(ip));
+				}
+				return list;
+			};
+
+
 			/**
 			 * All images indexed by ID to define an ordering
 			 */
