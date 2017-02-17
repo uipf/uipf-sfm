@@ -24,7 +24,7 @@ namespace uipfsfm {
 			/**
 			 * @return a list of visualization options.
 			 */
-			virtual std::vector<std::string> visualizations() {
+			virtual std::vector<std::string> visualizations() const {
 				std::vector<std::string> v;
 				v.push_back("image pair");
 				if (hasKeyPointMatches) {
@@ -33,7 +33,7 @@ namespace uipfsfm {
 				return v;
 			};
 
-			virtual void visualize(std::string option, uipf::VisualizationContext& context) {
+			virtual void visualize(std::string option, uipf::VisualizationContext& context) const {
 				if (option.compare("image pair") == 0 || option.compare("point matches") == 0) {
 
 					Image::ptr imageA = getContent().first;

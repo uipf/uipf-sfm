@@ -23,6 +23,7 @@ namespace uipfsfm {
 
 			// TODO width height, focal length
 
+			// TODO exif
 
 			bool hasKeyPoints = false;
 
@@ -54,54 +55,14 @@ namespace uipfsfm {
 			/**
 			 * @return a list of visualization options.
 			 */
-			virtual std::vector<std::string> visualizations() {
-				std::vector<std::string> v;
-				v.push_back("image");
-				if (hasKeyPoints) {
-					v.push_back("keypoints");
-					v.push_back("keypoints.txt");
-				}
-				return v;
-			};
+			virtual std::vector<std::string> visualizations() const;
 
-			virtual void visualize(std::string option, uipf::VisualizationContext& context) {
-				if (option.compare("image") == 0) {
-					uipf::data::OpenCVMat::ptr m = uipf::data::load_image_color(getContent());
-					context.displayImage(m->getContent());
-					return;
-				}
-				if (option.compare("keypoints") == 0) {
-					cv::Mat m = uipf::data::load_image_color(getContent())->getContent();
-
-					cv::drawKeypoints(m, keypoints->getContent(), m, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_OVER_OUTIMG + cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
-					context.displayImage(m);
-					return;
-				}
-				if (option.compare("keypoints.txt") == 0) {
-					std::ostringstream s;
-					keypoints->serialize(s);
-					context.displayText(s.str());
-					return;
-				}
-			};
+			virtual void visualize(std::string option, uipf::VisualizationContext& context) const;
 
 
-			virtual bool isSerializable() { return true; };
-			virtual void serialize(std::ostream& o) const {
+			virtual bool isSerializable() const { return true; };
+			virtual void serialize(std::ostream& o) const;
 
-				o << "filename: " << getContent() << "\n";
-				o << "hasKeyPoints: " << (hasKeyPoints ? "1" : "0") << "\n";
-				// TODO serialize keypoints
-				o << "hasProjectionMatrix: " << (hasProjectionMatrix ? "1" : "0") << "\n";
-				o << "P: " << P(0,0) << " TODO" << "\n"; // TODO
-				o << "hasCameraParameters: " << (hasCameraParameters ? "1" : "0") << "\n";
-				o << "camera.R: " << camera.R(0,0) << " TODO" << "\n";
-				o << "camera.t: " << camera.t(0) << " " << camera.t(1) << " " << camera.t(2) << "\n";
-				o << "camera.K: " << camera.K(0,0) << " TODO" << "\n";
-				o << "camera.f: " << camera.f << "\n";
-
-			};
 			// unserialize constructor
 			Image(std::istream&) {
 				// TODO implement

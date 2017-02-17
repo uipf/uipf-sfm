@@ -28,8 +28,25 @@ find_library(
 message("ModuleBase: ${ModuleBase}")
 include_directories(${CMAKE_INSTALL_PREFIX}/include)
 
+find_library(
+	uipf-geomview uipf-geomview
+	PATHS ${CMAKE_INSTALL_PREFIX}/lib
+)
+message("uipf-geomview: ${uipf-geomview}")
+
+
+
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
+
+add_library(uipf-sfm SHARED
+	src/data/Image.cpp
+)
+#set_target_properties(uipf-sfm PROPERTIES
+#	SOVERSION ${UIPFramework_VERSION_MAJOR}.${UIPFramework_VERSION_MINOR}
+#	VERSION ${UIPFramework_VERSION}
+#)
+target_link_libraries(uipf-sfm ${uipf-geomview} opencv_core opencv_features2d)
 
 # Point detectors
 add_subdirectory(src/converters)
@@ -42,4 +59,9 @@ add_subdirectory(tests)
 install(DIRECTORY ${uipf-sfm_SOURCE_DIR}/src/data
 		DESTINATION include/uipf-sfm
 		FILES_MATCHING PATTERN "*.hpp"
+)
+# installation targets
+install(TARGETS uipf-sfm
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
 )

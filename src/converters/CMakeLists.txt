@@ -5,19 +5,19 @@ project(uipf-sfm-converters)
 #
 
 add_library(SfMOpenCVMat2ImageModule SHARED SfMOpenCVMat2SfMImage.cpp)
-target_link_libraries(SfMOpenCVMat2ImageModule ${ModuleBase}) # opencv_core opencv_highgui
+target_link_libraries(SfMOpenCVMat2ImageModule ${ModuleBase} uipf-sfm) # opencv_core opencv_highgui
 
 add_library(SfMImage2OpenCVMatModule SHARED SfMImage2OpenCVMat.cpp)
-target_link_libraries(SfMImage2OpenCVMatModule ${ModuleBase}) # opencv_core opencv_highgui
+target_link_libraries(SfMImage2OpenCVMatModule ${ModuleBase} uipf-sfm) # opencv_core opencv_highgui
 
 add_library(SfMLoadImageModule SHARED SfMLoadImage.cpp)
-target_link_libraries(SfMLoadImageModule ${ModuleBase}) # opencv_core opencv_highgui
+target_link_libraries(SfMLoadImageModule ${ModuleBase} uipf-sfm) # opencv_core opencv_highgui
 
 add_library(SfMLoadImagesModule SHARED SfMLoadImages.cpp)
-target_link_libraries(SfMLoadImagesModule ${ModuleBase}) # opencv_core opencv_highgui
+target_link_libraries(SfMLoadImagesModule ${ModuleBase} uipf-sfm) # opencv_core opencv_highgui
 
 add_library(SfMCopyImage SHARED SfMCopyImage.cpp)
-target_link_libraries(SfMCopyImage ${ModuleBase}) # opencv_core opencv_highgui
+target_link_libraries(SfMCopyImage ${ModuleBase} uipf-sfm) # opencv_core opencv_highgui
 
 
 # installation targets

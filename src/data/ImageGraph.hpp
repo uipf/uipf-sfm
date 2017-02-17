@@ -16,8 +16,8 @@ namespace uipfsfm {
 		UIPF_DATA_TYPE_BEGIN (ImageGraph, "cebe.sfm.data.image_graph", std::vector<ImagePair::ptr>) // TODO internal data type is not really needed
 
 		public:
-			virtual bool isList() { return true; };
-			virtual std::vector<uipf::Data::ptr> getListContent() {
+			virtual bool isList() const { return true; };
+			virtual std::vector<uipf::Data::ptr> getListContent() const {
 				std::vector<uipf::Data::ptr> list;
 				for(ImagePair::ptr ip: data_) {
 					list.push_back(std::static_pointer_cast<uipf::Data>(ip));
@@ -48,14 +48,15 @@ namespace uipfsfm {
 			/**
 			 * @return a list of visualization options.
 			 */
-			virtual std::vector<std::string> visualizations() {
+			virtual std::vector<std::string> visualizations() const {
 				std::vector<std::string> v;
 				// TODO do not offer this option if graphviz is not installed
 				v.push_back("graph");
+				v.push_back("cameras 3D");
 				return v;
 			};
 
-			virtual void visualize(std::string option, uipf::VisualizationContext& context) {
+			virtual void visualize(std::string option, uipf::VisualizationContext& context) const {
 				if (option.compare("graph") == 0) {
 					// TODO choose temp path by uipf or directly pipe to commansd
 					std::ofstream s("/tmp/uipfsfm-graph.dot");
@@ -82,6 +83,11 @@ namespace uipfsfm {
 					context.displayImage(m->getContent());
 					return;
 
+				}
+				if (option.compare("cameras 3D") == 0) {
+					for(auto img: images) {
+						img.second->visualize("camera 3D", context);
+					}
 				}
 			}
 
