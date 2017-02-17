@@ -44,7 +44,7 @@ namespace uipfsfm {
 				// internal parameters
 				cv::Matx33d K;     /* Internal */
 
-				double f = -1;        /* Focal length */
+				double f = -1;        /* Focal length (in pixel) */
 			} CameraParameters;
 			bool hasCameraParameters = false;
 			/**

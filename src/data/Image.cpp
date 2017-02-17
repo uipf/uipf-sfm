@@ -1,6 +1,7 @@
 #include "Image.hpp"
 
 #include <uipf/geomview.hpp>
+#include <uipf/util.hpp>
 #include <tuple>
 
 
@@ -193,131 +194,78 @@ void Image::serialize(std::ostream &o) const {
 
 }
 
-// http://stackoverflow.com/a/236803/1106908
-template<typename Out>
-void split_string(const std::string &s, char delim, Out result) {
-	std::stringstream ss;
-	ss.str(s);
-	std::string item;
-	while (std::getline(ss, item, delim)) {
-		*(result++) = item;
+
+inline void uipf_sfm_image_estimate_focal_length(const map<string, string>& exif, Image& image)
+{
+	UIPF_LOG_TRACE("estimating focal length for image ", image.getContent());
+	// TODO simplify this with regex?
+
+	// find Focal length in EXIF data
+	auto focal_mm_s = exif.find("Focal length");
+	if (focal_mm_s == exif.end()) {
+		UIPF_LOG_TRACE("f-estimate: no focal lenghth in EXIF");
+		return;
 	}
-}
-std::vector<std::string> split_string(const std::string &s, char delim) {
-	std::vector<std::string> elems;
-	split_string(s, delim, std::back_inserter(elems));
-	return elems;
-}
+	// value should be something like  5.4mm  (35mm equivalent: 37mm)
+	vector<string> focal_parts = split_string(focal_mm_s->second, 'm');
+	if (focal_parts[0].empty()) {
+		UIPF_LOG_WARNING("f-estimate: badly formatted focal lenghth in EXIF");
+		return;
+	}
+	double focal_mm;
+	stringstream sf(focal_parts[0]);
+	sf.imbue(std::locale("C"));
+	sf >> focal_mm;
 
-// http://stackoverflow.com/a/29892589/1106908
-std::string & ltrim(std::string & str)
-{
-	auto it2 =  std::find_if( str.begin() , str.end() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
-	str.erase( str.begin() , it2);
-	return str;
-}
-std::string & rtrim(std::string & str)
-{
-	auto it1 =  std::find_if( str.rbegin() , str.rend() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
-	str.erase( it1.base() , str.end() );
-	return str;
-}
-std::string & trim(std::string & str)
-{
-	return ltrim(rtrim(str));
-}
-std::string trim_copy(std::string const & str)
-{
-	auto s = str;
-	return ltrim(rtrim(s));
-}
+	// find CCD width in EXIF data
+	auto ccd_mm_s = exif.find("CCD width");
+	if (ccd_mm_s == exif.end()) {
+		UIPF_LOG_TRACE("f-estimate: no CCD width in EXIF");
+		return;
+	}
+	// value should be something like 5.23mm
+	vector<string> ccd_parts = split_string(ccd_mm_s->second, 'm');
+	if (ccd_parts[0].empty()) {
+		UIPF_LOG_WARNING("f-estimate: badly formatted CCD width in EXIF");
+		return;
+	}
+	double ccd_width_mm;
+	stringstream sc(ccd_parts[0]);
+	sc.imbue(std::locale("C"));
+	sc >> ccd_width_mm;
 
-void uipf_sfm_image_extimate_focal_length()
-{
-	// TODO
-//	printf("[Extracting exif tags from image %s]\n", $img);
-//
-//	$make_line = `$JHEAD_EXE $img | grep "Camera make"`;
-//	$make_line =~ s/\r?\n$//;
-//	($make) = $make_line =~ /: (.*)$/;
-//
-//	$model_line = `$JHEAD_EXE $img | grep "Camera model"`;
-//	$model_line =~ s/\r?\n$//;
-//	($model) = $model_line =~ /: (.*)$/;
-//
-//# Grab focal length
-//	$focal_line = `$JHEAD_EXE $img | grep "Focal length" | awk '{print \$4}'`;
-//	($focal_mm) = $focal_line =~ /(.*)mm/;
-//	printf("  [Focal length = %0.3fmm]\n", $focal_mm);
-//
-//# Grab CCD width
-//
-//	$str = sprintf("%s %s", $make, $model);
-//
-//# Trim leading, trailing spaces
-//	$str =~ s/^\s+|\s+$//g ;
-//
-//	$ccd_width_mm = $ccd_widths{$str};
-//# printf("[Looking up %s, got %s\n", $str, $ccd_width_mm);
-//
-//	if ($ccd_width_mm == 0) {
-//		printf("[Couldn't find CCD width for camera %s]\n", $str);
-//		$ccd_width_line =
-//		`$JHEAD_EXE $img | grep "CCD width" | awk '{print \$4}'`;
-//		($ccd_width_mm) = $ccd_width_line =~ /(.*)mm/;
-//
-//		if ($ccd_width_mm != 0) {
-//			printf("[Found in EXIF tags]\n");
-//		}
-//	}
-//
-//	printf("  [CCD width = %0.3fmm]\n", $ccd_width_mm);
-//
-//# Grab resolution
-//	$resolution_line = `$JHEAD_EXE $img | grep "Resolution"`;
-//	($res_x, $res_y) = $resolution_line =~ /: ([0-9]*) x ([0-9]*)/;
-//	printf("  [Resolution = %d x %d]\n", $res_x, $res_y);
-//
-//# Check that we got everything we need
-//#    if ($focal_mm == 0 || $ccd_width_mm == 0 || $res_x == 0) {
-//#	printf("  [** Couldn't extract required fields, stop]\n");
-//#
-//#	if ($model ne "") {
-//	#	    printf("  [** $img: Couldn't find info on model %s %s]\n",
-//#		   $make, $model);
-//#	}
-//#
-//#	next;
-//#    }
-//
-//    if ($focal_mm == 0 || $ccd_width_mm == 0 || $res_x == 0) {
-//	$has_focal = 0;
-//    } else {
-//	$has_focal = 1;
-//    }
-//
-//    if ($res_x < $res_y) {
-//	# Aspect ratio is wrong
-//	$tmp = $res_x;
-//	$res_x = $res_y;
-//	$res_y = $tmp;
-//    }
-//
-//    # Convert to bmp and pgm
-//    $basename = `echo $img | sed 's/.[jJ][pP][gG]//'`;
-//    chomp($basename);
-//
-//    if ($has_focal == 1) {
-//	# Compute focal length in pixels
-//	$focal_pixels = $res_x * ($focal_mm / $ccd_width_mm);
-//	printf("  [Focal length (pixels) = %0.3f\n", $focal_pixels);
-//	$line = sprintf("%s.jpg 0 %0.5f", $basename, $SCALE * $focal_pixels);
-//    } else {
-//	$line = sprintf("%s.jpg", $basename);
-//    }
-//
-//    `echo $line >> $OUT_DIR/list.txt`;
-//    $num_output_images++;
+	// find Resolution in EXIF data
+	int res_w = 0;
+	int res_h = 0;
+	auto res_s = exif.find("Resolution");
+	if (res_s == exif.end()) {
+		res_w = image.width;
+		res_h = image.height;
+	} else {
+		// value should be something like 5.23mm
+		vector<string> res_parts = split_string(res_s->second, 'x');
+		if (res_parts[0].size() < 2) {
+			res_w = image.width;
+			res_h = image.height;
+		} else {
+			stringstream sw(trim(res_parts[0]));
+			sw.imbue(std::locale("C"));
+			sw >> res_w;
+			stringstream sh(trim(res_parts[1]));
+			sh.imbue(std::locale("C"));
+			sh >> res_h;
+			if (res_h != image.height || res_w != image.width) {
+				UIPF_LOG_WARNING("EXIF resolution (",res_w,"x",res_w,") is different from image resolution (",image.width,"x",image.height,") estimated focal length may be inaccurate!");
+			}
+		}
+	}
+
+	if (focal_mm > 0 && ccd_width_mm > 0 && res_w > 0 && res_h > 0) {
+		image.camera.f = res_w * (focal_mm / ccd_width_mm);
+	} else {
+		UIPF_LOG_WARNING("Failed to estimate focal length (invalid EXIF data, f=", focal_mm, " ccd=", ccd_width_mm, " w=", res_w,
+		                 " h=", res_h, ") for image ", image.getContent());
+	}
 }
 
 void Image::loadExif()
@@ -364,6 +312,8 @@ void Image::loadExif()
 		}
 		exif.insert(pair<string, string>(name, trim(value)));
 	}
+
+	uipf_sfm_image_estimate_focal_length(exif, *this);
 }
 
 
