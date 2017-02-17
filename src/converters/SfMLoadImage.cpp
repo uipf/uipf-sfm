@@ -27,6 +27,7 @@ void SfMLoadImage::run() {
 	cv::Mat m = cv::imread(filename);
 	image->height = m.rows;
 	image->width = m.cols;
+	image->loadExif();
 
 	setOutputData<Image>("image", image);
 }

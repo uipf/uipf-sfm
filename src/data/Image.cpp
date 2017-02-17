@@ -17,9 +17,14 @@ std::vector<std::string> Image::visualizations() const
 		v.push_back("keypoints");
 		v.push_back("keypoints.txt");
 	}
-	if (hasProjectionMatrix || hasCameraParameters) {
+//	if (hasProjectionMatrix || hasCameraParameters) {
 		v.push_back("params");
+//	}
+	if (hasCameraParameters) {
 		v.push_back("camera 3D");
+	}
+	if (!exif.empty()) {
+		v.push_back("EXIF");
 	}
 	return v;
 }
@@ -144,6 +149,14 @@ void Image::visualize(std::string option, uipf::VisualizationContext &context) c
 		context.displayText(s.str());
 		return;
 	}
+	if (option.compare("EXIF") == 0) {
+		std::ostringstream s;
+		for(auto exifItem: exif) {
+			s << exifItem.first << " : " << exifItem.second << "\n";
+		}
+		context.displayText(s.str());
+		return;
+	}
 	if (option.compare("camera 3D") == 0) {
 		// TODO use basename for name
 		uipfsfm_data_image_visualize_camera(*uipf::GeomView::instance(), getContent(), camera, width, height);
@@ -154,6 +167,8 @@ void Image::visualize(std::string option, uipf::VisualizationContext &context) c
 void Image::serialize(std::ostream &o) const {
 
 	o << "filename: " << getContent() << "\n";
+	o << "width: " << width << "\n";
+	o << "height: " << height << "\n";
 	o << "hasKeyPoints: " << (hasKeyPoints ? "1" : "0") << "\n";
 	// TODO serialize keypoints
 	o << "hasProjectionMatrix: " << (hasProjectionMatrix ? "1" : "0") << "\n";
@@ -171,9 +186,184 @@ void Image::serialize(std::ostream &o) const {
 		o << "camera.K:\n" << camera.K(0, 0) << " " << camera.K(0, 1) << " " << camera.K(0, 2) << "\n";
 		o <<                  camera.K(1, 0) << " " << camera.K(1, 1) << " " << camera.K(1, 2) << "\n";
 		o <<                  camera.K(2, 0) << " " << camera.K(2, 1) << " " << camera.K(2, 2) << "\n";
+	}
+	if (camera.f > 0) {
 		o << "camera.f: "  << camera.f << "\n";
 	}
 
+}
+
+// http://stackoverflow.com/a/236803/1106908
+template<typename Out>
+void split_string(const std::string &s, char delim, Out result) {
+	std::stringstream ss;
+	ss.str(s);
+	std::string item;
+	while (std::getline(ss, item, delim)) {
+		*(result++) = item;
+	}
+}
+std::vector<std::string> split_string(const std::string &s, char delim) {
+	std::vector<std::string> elems;
+	split_string(s, delim, std::back_inserter(elems));
+	return elems;
+}
+
+// http://stackoverflow.com/a/29892589/1106908
+std::string & ltrim(std::string & str)
+{
+	auto it2 =  std::find_if( str.begin() , str.end() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
+	str.erase( str.begin() , it2);
+	return str;
+}
+std::string & rtrim(std::string & str)
+{
+	auto it1 =  std::find_if( str.rbegin() , str.rend() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
+	str.erase( it1.base() , str.end() );
+	return str;
+}
+std::string & trim(std::string & str)
+{
+	return ltrim(rtrim(str));
+}
+std::string trim_copy(std::string const & str)
+{
+	auto s = str;
+	return ltrim(rtrim(s));
+}
+
+void uipf_sfm_image_extimate_focal_length()
+{
+	// TODO
+//	printf("[Extracting exif tags from image %s]\n", $img);
+//
+//	$make_line = `$JHEAD_EXE $img | grep "Camera make"`;
+//	$make_line =~ s/\r?\n$//;
+//	($make) = $make_line =~ /: (.*)$/;
+//
+//	$model_line = `$JHEAD_EXE $img | grep "Camera model"`;
+//	$model_line =~ s/\r?\n$//;
+//	($model) = $model_line =~ /: (.*)$/;
+//
+//# Grab focal length
+//	$focal_line = `$JHEAD_EXE $img | grep "Focal length" | awk '{print \$4}'`;
+//	($focal_mm) = $focal_line =~ /(.*)mm/;
+//	printf("  [Focal length = %0.3fmm]\n", $focal_mm);
+//
+//# Grab CCD width
+//
+//	$str = sprintf("%s %s", $make, $model);
+//
+//# Trim leading, trailing spaces
+//	$str =~ s/^\s+|\s+$//g ;
+//
+//	$ccd_width_mm = $ccd_widths{$str};
+//# printf("[Looking up %s, got %s\n", $str, $ccd_width_mm);
+//
+//	if ($ccd_width_mm == 0) {
+//		printf("[Couldn't find CCD width for camera %s]\n", $str);
+//		$ccd_width_line =
+//		`$JHEAD_EXE $img | grep "CCD width" | awk '{print \$4}'`;
+//		($ccd_width_mm) = $ccd_width_line =~ /(.*)mm/;
+//
+//		if ($ccd_width_mm != 0) {
+//			printf("[Found in EXIF tags]\n");
+//		}
+//	}
+//
+//	printf("  [CCD width = %0.3fmm]\n", $ccd_width_mm);
+//
+//# Grab resolution
+//	$resolution_line = `$JHEAD_EXE $img | grep "Resolution"`;
+//	($res_x, $res_y) = $resolution_line =~ /: ([0-9]*) x ([0-9]*)/;
+//	printf("  [Resolution = %d x %d]\n", $res_x, $res_y);
+//
+//# Check that we got everything we need
+//#    if ($focal_mm == 0 || $ccd_width_mm == 0 || $res_x == 0) {
+//#	printf("  [** Couldn't extract required fields, stop]\n");
+//#
+//#	if ($model ne "") {
+//	#	    printf("  [** $img: Couldn't find info on model %s %s]\n",
+//#		   $make, $model);
+//#	}
+//#
+//#	next;
+//#    }
+//
+//    if ($focal_mm == 0 || $ccd_width_mm == 0 || $res_x == 0) {
+//	$has_focal = 0;
+//    } else {
+//	$has_focal = 1;
+//    }
+//
+//    if ($res_x < $res_y) {
+//	# Aspect ratio is wrong
+//	$tmp = $res_x;
+//	$res_x = $res_y;
+//	$res_y = $tmp;
+//    }
+//
+//    # Convert to bmp and pgm
+//    $basename = `echo $img | sed 's/.[jJ][pP][gG]//'`;
+//    chomp($basename);
+//
+//    if ($has_focal == 1) {
+//	# Compute focal length in pixels
+//	$focal_pixels = $res_x * ($focal_mm / $ccd_width_mm);
+//	printf("  [Focal length (pixels) = %0.3f\n", $focal_pixels);
+//	$line = sprintf("%s.jpg 0 %0.5f", $basename, $SCALE * $focal_pixels);
+//    } else {
+//	$line = sprintf("%s.jpg", $basename);
+//    }
+//
+//    `echo $line >> $OUT_DIR/list.txt`;
+//    $num_output_images++;
+}
+
+void Image::loadExif()
+{
+	string output;
+	try {
+		output = uipf_exec_stdout((string("jhead ") + getContent()).c_str());
+	} catch(uipf::ErrorException& e) {
+		UIPF_LOG_WARNING("Failed to load EXIF information for image ", getContent(), ": ", e.what());
+		return;
+	}
+	// output should contain something like:
+//	File name    : kermit000.jpg
+//	File size    : 165140 bytes
+//	File date    : 2017:01:14 07:39:31
+//	Camera make  : Canon
+//	Camera model : Canon PowerShot A10
+//	Date/Time    : 2004:11:03 21:10:01
+//	Resolution   : 640 x 480
+//	Flash used   : No
+//	Focal length :  5.4mm  (35mm equivalent: 37mm)
+//	CCD width    : 5.23mm
+//	Exposure time: 0.050 s  (1/20)
+//	Aperture     : f/2.8
+//	Focus dist.  : 0.62m
+//	Light Source : Fluorescent
+//	Metering Mode: pattern
+//	JPEG Quality : 97
+
+	exif.clear();
+	for(string line: split_string(output, '\n')) {
+		if (line.empty()) {
+			continue;
+		}
+		vector<string> parts = split_string(line, ':');
+		string name = parts[0];
+		trim(name);
+		if (name.empty()) {
+			continue;
+		}
+		string value;
+		for(size_t i = 1; i < parts.size(); ++i) {
+			value += parts[i];
+		}
+		exif.insert(pair<string, string>(name, trim(value)));
+	}
 }
 
 

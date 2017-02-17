@@ -39,6 +39,7 @@ void SfMLoadImages::run() {
 		if (m.data) {
 			image->height = m.rows;
 			image->width = m.cols;
+			image->loadExif();
 
 			list->getContent().push_back(image);
 		}

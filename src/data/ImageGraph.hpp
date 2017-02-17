@@ -52,7 +52,12 @@ namespace uipfsfm {
 				std::vector<std::string> v;
 				// TODO do not offer this option if graphviz is not installed
 				v.push_back("graph");
-				v.push_back("cameras 3D");
+				for(auto img: images) {
+					if (img.second->hasCameraParameters) {
+						v.push_back("cameras 3D");
+						break;
+					}
+				}
 				return v;
 			};
 
@@ -86,7 +91,9 @@ namespace uipfsfm {
 				}
 				if (option.compare("cameras 3D") == 0) {
 					for(auto img: images) {
-						img.second->visualize("camera 3D", context);
+						if (img.second->hasCameraParameters) {
+							img.second->visualize("camera 3D", context);
+						}
 					}
 				}
 			}

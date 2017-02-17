@@ -55,6 +55,7 @@ void SfMCopyImage::run() {
 	}
 	// TODO error handling
 	fs::copy(src, target);
+	// TODO really copy the object and all info
 	image->setContent(target.string());
 
 	setOutputData<Image>("image", image);

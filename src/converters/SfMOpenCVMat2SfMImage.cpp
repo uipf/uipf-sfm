@@ -37,6 +37,7 @@ void SfMOpenCVMat2SfMImage::run() {
 
 	sfmImage->height = image->getContent().rows;
 	sfmImage->width = image->getContent().cols;
+	sfmImage->loadExif();
 
 	setOutputData<Image>("image", sfmImage);
 

@@ -44,7 +44,7 @@ namespace uipfsfm {
 				// internal parameters
 				cv::Matx33d K;     /* Internal */
 
-				double f;        /* Focal length */
+				double f = -1;        /* Focal length */
 			} CameraParameters;
 			bool hasCameraParameters = false;
 			/**
@@ -68,6 +68,9 @@ namespace uipfsfm {
 				// TODO implement
 				throw uipf::ErrorException("Data Type is not serializable.");
 			};
+
+			std::map<std::string, std::string> exif;
+			void loadExif();
 
 
 			// TODO PMVS supports image masks
