@@ -9,8 +9,6 @@
 #include <opencv2/opencv.hpp>
 #include <sstream>
 
-// TODO check if external 'C' is needed here
-
 namespace uipfsfm {
 	namespace data {
 
@@ -44,7 +42,9 @@ namespace uipfsfm {
 				// internal parameters
 				cv::Matx33d K;     /* Internal */
 
-				double f = -1;        /* Focal length (in pixel) */
+				double f = -1;            /* Focal length (in pixel) */
+				double f_mm = -1;         /* Focal length (in mm) */
+				double ccd_width_mm = -1; /* CCD width (in mm) */
 			} CameraParameters;
 			bool hasCameraParameters = false;
 			/**

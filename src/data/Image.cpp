@@ -34,7 +34,7 @@ std::vector<std::string> Image::visualizations() const
 // calculate camera field of view
 inline std::tuple<Point_3, Point_3, Point_3, Point_3> uipfsfm_data_image_calculate_fov(
 		const Point_3& position,
-		const Direction_3 & direction,
+		const Direction_3& direction,
         double focalLength,
         double resolution_x,
         double resolution_y
@@ -79,8 +79,21 @@ inline void uipfsfm_data_image_visualize_camera(uipf::GeomView& gv, const std::s
 	gv.gv() << CGAL::RED;
 
 	// print FoV
+	double f = c.f_mm;
+	double ccd = c.ccd_width_mm;
+	if (f <= 0 || ccd <= 0) {
+		// assume something to still show a camera
+		f = 35;//mm
+		ccd = 2*f;
+		UIPF_LOG_TRACE("No camera parameters, assuming some to show a camera");
+	}
+
+	// TODO find some automatic scale for nicer visualisation
+	UIPF_LOG_TRACE("Camera viz: f=",f," ccd=",ccd," pos=",position);
+
+
 	Point_3 spanA, spanB, spanC, spanD;
-	std::tie(spanA, spanB, spanC, spanD) = uipfsfm_data_image_calculate_fov(position, direction, c.f, w, h);
+	std::tie(spanA, spanB, spanC, spanD) = uipfsfm_data_image_calculate_fov(position, direction, f, ccd, ccd / w * h);
 
 	Polyhedron Pcam;
 	std::stringstream scam;
@@ -262,6 +275,8 @@ inline void uipf_sfm_image_estimate_focal_length(const map<string, string>& exif
 
 	if (focal_mm > 0 && ccd_width_mm > 0 && res_w > 0 && res_h > 0) {
 		image.camera.f = res_w * (focal_mm / ccd_width_mm);
+		image.camera.f_mm = focal_mm;
+		image.camera.ccd_width_mm = ccd_width_mm;
 	} else {
 		UIPF_LOG_WARNING("Failed to estimate focal length (invalid EXIF data, f=", focal_mm, " ccd=", ccd_width_mm, " w=", res_w,
 		                 " h=", res_h, ") for image ", image.getContent());

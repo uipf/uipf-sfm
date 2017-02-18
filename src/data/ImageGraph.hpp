@@ -8,8 +8,6 @@
 #include "Image.hpp"
 #include "ImagePair.hpp"
 
-// TODO check if external 'C' is needed here
-
 namespace uipfsfm {
 	namespace data {
 

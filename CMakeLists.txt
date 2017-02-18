@@ -41,7 +41,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_library(uipf-sfm SHARED
 	src/data/Image.cpp
-)
+	src/data/PointCloud.cpp src/data/PointCloud.hpp)
 #set_target_properties(uipf-sfm PROPERTIES
 #	SOVERSION ${UIPFramework_VERSION_MAJOR}.${UIPFramework_VERSION_MINOR}
 #	VERSION ${UIPFramework_VERSION}
