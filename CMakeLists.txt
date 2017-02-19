@@ -36,22 +36,27 @@ message("uipf-geomview: ${uipf-geomview}")
 
 
 
+include_directories(${PROJECT_SOURCE_DIR}/lib)
+include_directories(${PROJECT_SOURCE_DIR}/lib/libply)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 
 add_library(uipf-sfm SHARED
 	src/data/Image.cpp
-	src/data/PointCloud.cpp src/data/PointCloud.hpp)
+	src/data/PointCloud.cpp
+)
 #set_target_properties(uipf-sfm PROPERTIES
 #	SOVERSION ${UIPFramework_VERSION_MAJOR}.${UIPFramework_VERSION_MINOR}
 #	VERSION ${UIPFramework_VERSION}
 #)
-target_link_libraries(uipf-sfm ${uipf-geomview} opencv_core opencv_features2d)
+target_link_libraries(uipf-sfm ${uipf-geomview} opencv_core opencv_features2d uipf-sfm-libply)
 
 # Point detectors
 add_subdirectory(src/converters)
 add_subdirectory(src/point-detectors)
 add_subdirectory(src/point-descriptors)
+add_subdirectory(lib/libply)
+#add_subdirectory(lib/ply)
 
 add_subdirectory(tests)
 

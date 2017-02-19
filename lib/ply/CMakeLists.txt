@@ -8,13 +8,14 @@ if(UNIX)
 	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer")
 endif()
 
-message("CMAKE_C_FLAGS: ${CMAKE_CXX_FLAGS}")
-message("CMAKE_C_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
-message("CMAKE_C_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+message("CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
+message("CMAKE_C_FLAGS_DEBUG: ${CMAKE_C_FLAGS_DEBUG}")
+message("CMAKE_C_FLAGS_RELEASE: ${CMAKE_C_FLAGS_RELEASE}")
 
 include_directories(${uipf-sfm-ply_SOURCE_DIR})
 
 add_library(uipf-sfm-ply SHARED
+	ply.h
 	plyfile.c
 )
 

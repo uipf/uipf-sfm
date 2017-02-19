@@ -21,6 +21,15 @@ namespace uipfsfm {
 			virtual void visualize(std::string option, uipf::VisualizationContext& context) const;
 
 
+			virtual bool isSerializable() const;
+
+			// serialization, allow reading from files and writing to files
+			// or other string transport
+			virtual void serialize(std::ostream&) const;
+			// unserialize constructor
+			PointCloud(std::istream&);
+
+
 		UIPF_DATA_TYPE_END
 	}
 }
