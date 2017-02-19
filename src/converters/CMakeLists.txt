@@ -19,6 +19,9 @@ target_link_libraries(SfMLoadImagesModule ${ModuleBase} uipf-sfm) # opencv_core 
 add_library(SfMCopyImage SHARED SfMCopyImage.cpp)
 target_link_libraries(SfMCopyImage ${ModuleBase} uipf-sfm) # opencv_core opencv_highgui
 
+add_library(SfMLoadPointCloud SHARED SfMLoadPointCloud.cpp)
+target_link_libraries(SfMLoadPointCloud ${ModuleBase} uipf-sfm) # opencv_core opencv_highgui
+
 
 # installation targets
 install(TARGETS
@@ -27,6 +30,7 @@ install(TARGETS
 		SfMLoadImageModule
 		SfMLoadImagesModule
 		SfMCopyImage
+		SfMLoadPointCloud
 
 		LIBRARY DESTINATION lib/uipf
 		ARCHIVE DESTINATION lib/uipf

@@ -84,6 +84,7 @@ public:
 
 		ply::ply_parser::scalar_property_definition_callbacks_type scalar_property_definition_callbacks;
 		ply::at<ply::float32>(scalar_property_definition_callbacks) = std::tr1::bind(&ply_to_pointcloud::scalar_property_definition_callback<ply::float32>, this, std::tr1::_Placeholder<1>(), std::tr1::_Placeholder<2>());
+		ply::at<ply::uint8>(scalar_property_definition_callbacks) = std::tr1::bind(&ply_to_pointcloud::scalar_property_definition_callback_color<ply::uint8>, this, std::tr1::_Placeholder<1>(), std::tr1::_Placeholder<2>());
 		ply_parser.scalar_property_definition_callbacks(scalar_property_definition_callbacks);
 
 		return ply_parser.parse(istream);
@@ -128,6 +129,11 @@ private:
 			} else if (property_name == "nz") {
 				return std::tr1::bind(&ply_to_pointcloud::vertex_nz, this, std::tr1::_Placeholder<1>());
 			}
+		}
+		return 0;
+	}
+	template <typename ScalarType> std::tr1::function<void (ScalarType)> scalar_property_definition_callback_color(const std::string& element_name, const std::string& property_name) {
+		if (element_name == "vertex") {
 			if (property_name == "diffuse_red") {
 				hasColor = true;
 				return std::tr1::bind(&ply_to_pointcloud::vertex_red, this, std::tr1::_Placeholder<1>());
@@ -148,23 +154,23 @@ private:
 	void vertex_nx(ply::float32 nx) { vertex_nx_ = nx; };
 	void vertex_ny(ply::float32 ny) { vertex_ny_ = ny; };
 	void vertex_nz(ply::float32 nz) { vertex_nz_ = nz; };
-	void vertex_red(ply::float32 r) { vertex_red_ = r; };
-	void vertex_green(ply::float32 g) { vertex_green_ = g; };
-	void vertex_blue(ply::float32 b) { vertex_blue_ = b; };
+	void vertex_red(ply::uint8 r) { vertex_red_ = r; };
+	void vertex_green(ply::uint8 g) { vertex_green_ = g; };
+	void vertex_blue(ply::uint8 b) { vertex_blue_ = b; };
 	void vertex_end() {
 		vertices_.push_back(cv::Point3d(vertex_x_, vertex_y_, vertex_z_));
-		if (hasColor) {
-			colors_.push_back(cv::Scalar(vertex_red_, vertex_green_, vertex_blue_));
-		}
 		if (hasNormal) {
 			normals_.push_back(cv::Point3d(vertex_nx_, vertex_ny_, vertex_nz_));
+		}
+		if (hasColor) {
+			colors_.push_back(cv::Scalar(vertex_red_, vertex_green_, vertex_blue_));
 		}
 	};
 	ply::float32 vertex_x_, vertex_y_, vertex_z_;
 	bool hasNormal = false;
 	ply::float32 vertex_nx_, vertex_ny_, vertex_nz_;
 	bool hasColor = false;
-	ply::float32 vertex_red_, vertex_green_, vertex_blue_;
+	ply::uint8 vertex_red_, vertex_green_, vertex_blue_;
 	std::vector<cv::Point3d> vertices_;
 	std::vector<cv::Point3d> normals_;
 	std::vector<cv::Scalar> colors_;
