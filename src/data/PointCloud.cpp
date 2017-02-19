@@ -89,6 +89,8 @@ public:
 		return ply_parser.parse(istream);
 	};
 	std::vector<cv::Point3d> getVertices() { return vertices_; }
+	std::vector<cv::Scalar> getColors() { return colors_; }
+	std::vector<cv::Point3d> getNormals() { return normals_; }
 private:
 	void info_callback(std::size_t line_number, const std::string& message) {
 		std::cerr << line_number << ": " << "info: " << message << std::endl;
@@ -119,6 +121,23 @@ private:
 			} else if (property_name == "z") {
 				return std::tr1::bind(&ply_to_pointcloud::vertex_z, this, std::tr1::_Placeholder<1>());
 			}
+			if (property_name == "nx") {
+				return std::tr1::bind(&ply_to_pointcloud::vertex_nx, this, std::tr1::_Placeholder<1>());
+			} else if (property_name == "ny") {
+				return std::tr1::bind(&ply_to_pointcloud::vertex_ny, this, std::tr1::_Placeholder<1>());
+			} else if (property_name == "nz") {
+				return std::tr1::bind(&ply_to_pointcloud::vertex_nz, this, std::tr1::_Placeholder<1>());
+			}
+			if (property_name == "diffuse_red") {
+				hasColor = true;
+				return std::tr1::bind(&ply_to_pointcloud::vertex_red, this, std::tr1::_Placeholder<1>());
+			} else if (property_name == "diffuse_green") {
+				hasColor = true;
+				return std::tr1::bind(&ply_to_pointcloud::vertex_green, this, std::tr1::_Placeholder<1>());
+			} else if (property_name == "diffuse_blue") {
+				hasColor = true;
+				return std::tr1::bind(&ply_to_pointcloud::vertex_blue, this, std::tr1::_Placeholder<1>());
+			}
 		}
 		return 0;
 	}
@@ -126,24 +145,43 @@ private:
 	void vertex_x(ply::float32 x) { vertex_x_ = x; };
 	void vertex_y(ply::float32 y) { vertex_y_ = y; };
 	void vertex_z(ply::float32 z) { vertex_z_ = z; };
+	void vertex_nx(ply::float32 nx) { vertex_nx_ = nx; };
+	void vertex_ny(ply::float32 ny) { vertex_ny_ = ny; };
+	void vertex_nz(ply::float32 nz) { vertex_nz_ = nz; };
+	void vertex_red(ply::float32 r) { vertex_red_ = r; };
+	void vertex_green(ply::float32 g) { vertex_green_ = g; };
+	void vertex_blue(ply::float32 b) { vertex_blue_ = b; };
 	void vertex_end() {
 		vertices_.push_back(cv::Point3d(vertex_x_, vertex_y_, vertex_z_));
+		if (hasColor) {
+			colors_.push_back(cv::Scalar(vertex_red_, vertex_green_, vertex_blue_));
+		}
+		if (hasNormal) {
+			normals_.push_back(cv::Point3d(vertex_nx_, vertex_ny_, vertex_nz_));
+		}
 	};
 	ply::float32 vertex_x_, vertex_y_, vertex_z_;
+	bool hasNormal = false;
+	ply::float32 vertex_nx_, vertex_ny_, vertex_nz_;
+	bool hasColor = false;
+	ply::float32 vertex_red_, vertex_green_, vertex_blue_;
 	std::vector<cv::Point3d> vertices_;
+	std::vector<cv::Point3d> normals_;
+	std::vector<cv::Scalar> colors_;
 };
 
 
 
 PointCloud::PointCloud(std::istream& s)
 {
-	// TODO read normals and color
+	// TODO read normals
 
 	ply_to_pointcloud p2p;
 	if (!p2p.convert(s)) {
 		throw uipf::ErrorException("Failed to read point cloud from PLY file.");
 	}
 	setContent(p2p.getVertices());
+	colors = p2p.getColors();
 
 }
 
