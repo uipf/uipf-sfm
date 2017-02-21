@@ -2,6 +2,7 @@
 #define UIPFSFM_DATA_SFMIMAGEGRAPH_HPP
 
 #include <sstream>
+#include <iostream>
 
 #include <uipf/data.hpp>
 #include <uipf/data/list.hpp>
