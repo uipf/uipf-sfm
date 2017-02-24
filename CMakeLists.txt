@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 2.8.8)
 project(uipf-sfm)
 
 #c++11 support
@@ -45,10 +45,10 @@ add_library(uipf-sfm SHARED
 	src/data/Image.cpp
 	src/data/PointCloud.cpp
 )
-#set_target_properties(uipf-sfm PROPERTIES
-#	SOVERSION ${UIPFramework_VERSION_MAJOR}.${UIPFramework_VERSION_MINOR}
-#	VERSION ${UIPFramework_VERSION}
-#)
+set_target_properties(uipf-sfm PROPERTIES
+	SOVERSION 1.0
+	VERSION 1.0.0
+)
 target_link_libraries(uipf-sfm ${uipf-geomview} opencv_core opencv_features2d uipf-sfm-libply)
 
 # Point detectors
@@ -58,7 +58,10 @@ add_subdirectory(src/point-descriptors)
 add_subdirectory(lib/libply)
 #add_subdirectory(lib/ply)
 
-add_subdirectory(tests)
+option(WITH_TESTS "Build test binaries and enable `make test` target" ON)
+if(WITH_TESTS)
+	add_subdirectory(tests)
+endif()
 
 
 install(DIRECTORY ${uipf-sfm_SOURCE_DIR}/src/data

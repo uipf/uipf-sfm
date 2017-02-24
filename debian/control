@@ -1,0 +1,31 @@
+Source: uipf-sfm
+Section: science
+Priority: optional
+Maintainer: Carsten Brandt <mail@cebe.cc>
+Build-Depends: debhelper (>= 9), cmake, libuipf-dev, libuipf-geomview-dev, libboost-filesystem-dev, libopencv-dev
+Standards-Version: 3.9.5
+Homepage: https://gitlab.cebe.cc/master/uipf-sfm
+Vcs-Git: https://gitlab.cebe.cc:master/uipf-sfm.git
+Vcs-Browser: https://gitlab.cebe.cc/master/uipf-sfm
+
+#
+# Package definitions
+#
+# some information on libary building
+# https://www.debian.org/doc/manuals/maint-guide/dother.en.html#symbols
+# https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-symbols
+
+
+# main library
+Package: libuipf-sfm
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Struture from Motion Tools for UIPF
+ TBD
+
+# dev headers for libuipf-sfm
+Package: libuipf-sfm-dev
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libuipf-sfm
+Description: Struture from Motion Tools for UIPF (development headers)
+ TBD
