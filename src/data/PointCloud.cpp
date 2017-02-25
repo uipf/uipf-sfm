@@ -83,8 +83,8 @@ public:
 		ply_parser.element_definition_callback(std::tr1::bind(&ply_to_pointcloud::element_definition_callback, this, std::tr1::_Placeholder<1>(), std::tr1::_Placeholder<2>()));
 
 		ply::ply_parser::scalar_property_definition_callbacks_type scalar_property_definition_callbacks;
-		ply::at<ply::float32>(scalar_property_definition_callbacks) = std::tr1::bind(&ply_to_pointcloud::scalar_property_definition_callback<ply::float32>, this, std::tr1::_Placeholder<1>(), std::tr1::_Placeholder<2>());
-		ply::at<ply::uint8>(scalar_property_definition_callbacks) = std::tr1::bind(&ply_to_pointcloud::scalar_property_definition_callback_color<ply::uint8>, this, std::tr1::_Placeholder<1>(), std::tr1::_Placeholder<2>());
+		scalar_property_definition_callbacks.get<ply::float32>() = std::tr1::bind(&ply_to_pointcloud::scalar_property_definition_callback<ply::float32>, this, std::tr1::_Placeholder<1>(), std::tr1::_Placeholder<2>());
+		scalar_property_definition_callbacks.get<ply::uint8>() = std::tr1::bind(&ply_to_pointcloud::scalar_property_definition_callback_color<ply::uint8>, this, std::tr1::_Placeholder<1>(), std::tr1::_Placeholder<2>());
 		ply_parser.scalar_property_definition_callbacks(scalar_property_definition_callbacks);
 
 		return ply_parser.parse(istream);

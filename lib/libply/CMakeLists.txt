@@ -18,6 +18,10 @@ add_library(uipf-sfm-libply SHARED
 	ply/ply.hpp
 	ply/ply_parser.cpp
 )
+set_target_properties(uipf-sfm-libply PROPERTIES
+	SOVERSION 0
+	VERSION 0.1
+)
 
 #install(FILES ply.h
 #		DESTINATION include/uipf-sfm

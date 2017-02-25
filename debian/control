@@ -16,6 +16,8 @@ Vcs-Browser: https://gitlab.cebe.cc/master/uipf-sfm
 # https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-symbols
 
 
+# TODO separate package for libply
+
 # main library
 Package: libuipf-sfm
 Architecture: any
