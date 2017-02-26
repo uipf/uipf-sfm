@@ -28,6 +28,6 @@ Description: Struture from Motion Tools for UIPF
 # dev headers for libuipf-sfm
 Package: libuipf-sfm-dev
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libuipf-sfm
+Depends: ${shlibs:Depends}, ${misc:Depends}, libuipf-sfm (= ${binary:Version})
 Description: Struture from Motion Tools for UIPF (development headers)
  TBD
