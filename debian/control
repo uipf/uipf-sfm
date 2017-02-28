@@ -21,7 +21,7 @@ Vcs-Browser: https://gitlab.cebe.cc/master/uipf-sfm
 # main library
 Package: libuipf-sfm
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, graphviz
 Description: Struture from Motion Tools for UIPF
  TBD
 
