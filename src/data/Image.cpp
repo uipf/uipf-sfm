@@ -204,6 +204,12 @@ void Image::serialize(std::ostream &o) const {
 	if (camera.f > 0) {
 		o << "camera.f: "  << camera.f << "\n";
 	}
+	if (camera.f_mm > 0) {
+		o << "camera.f_mm: "  << camera.f_mm << "\n";
+	}
+	if (camera.ccd_width_mm > 0) {
+		o << "camera.ccd_width_mm: "  << camera.ccd_width_mm << "\n";
+	}
 
 }
 

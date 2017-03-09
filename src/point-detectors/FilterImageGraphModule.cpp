@@ -38,18 +38,6 @@ void FilterImageGraphModule::run() {
 
 	ImageGraph::ptr imageGraph = getInputData<ImageGraph>("imageGraph");
 
-	int matchThreshold = getParam<int>("matchThreshold", -1);
-	if (matchThreshold > 0) {
-		vector<ImagePair::ptr>& v = imageGraph->getContent();
-		for(auto it = v.begin(); it != v.end(); /* ++ is done below*/) {
-			if (!(*it)->hasKeyPointMatches || (*it)->keyPointMatches.size() < (unsigned)matchThreshold) {
-				it = v.erase(it);
-			} else {
-				it++;
-			}
-		}
-	}
-
 	int filterRegion = getParam<int>("filterRegion", -1);
 	if (filterRegion > 0) {
 		vector<ImagePair::ptr>& v = imageGraph->getContent();
@@ -69,6 +57,19 @@ void FilterImageGraphModule::run() {
 				}
 			}
 
+		}
+	}
+
+	int matchThreshold = getParam<int>("matchThreshold", -1);
+	if (matchThreshold > 0) {
+		vector<ImagePair::ptr>& v = imageGraph->getContent();
+		for(auto it = v.begin(); it != v.end(); /* ++ is done below*/) {
+			if (!(*it)->hasKeyPointMatches || (*it)->keyPointMatches.size() < (unsigned)matchThreshold) {
+				UIPF_LOG_INFO("removed image pair ", (*it)->getContent().first->getContent(), (*it)->getContent().second->getContent());
+				it = v.erase(it);
+			} else {
+				it++;
+			}
 		}
 	}
 
