@@ -26,6 +26,10 @@ void PointCloud::visualize(std::string option, uipf::VisualizationContext &conte
 	if (option.compare("points 3D") == 0) {
 
 		const std::vector<cv::Point3d>& cvPoints = getContent();
+		if (cvPoints.size() == 0) {
+			throw uipf::ErrorException("Point cloud is empty.");
+		}
+
 		if (colors.size() == 0) {
 
 			std::vector<Point_3> points;

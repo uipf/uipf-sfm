@@ -10,6 +10,19 @@ using namespace uipfsfm::data;
 using namespace uipf::geomview;
 
 
+/**
+ * @return whether a matrix is different from 0.
+ */
+template <typename _Tp, int m, int n>
+bool isZero(cv::Matx<_Tp, m, n> ma) {
+	for(double d: ma.val) {
+		if (d > 0.0001 || d < -0.0001) {
+			return false;
+		}
+	}
+	return true;
+}
+
 std::vector<std::string> Image::visualizations() const
 {
 	std::vector<std::string> v;
@@ -21,7 +34,7 @@ std::vector<std::string> Image::visualizations() const
 //	if (hasProjectionMatrix || hasCameraParameters) {
 		v.push_back("params");
 //	}
-	if (hasCameraParameters) {
+	if (hasCameraParameters && !isZero(camera.R) && !isZero(camera.t)) {
 		v.push_back("camera 3D");
 	}
 	if (!exif.empty()) {
@@ -70,6 +83,11 @@ inline std::tuple<Vector_3, Vector_3, Vector_3, Vector_3> uipfsfm_data_image_cal
 // TODO move this into a cpp file
 // draw camera for visualization
 inline void uipfsfm_data_image_visualize_camera(uipf::GeomView& gv, const std::string& name, const Image::CameraParameters& c, int w, int h, const std::string& texture) {
+
+	// do not try to visualize if R or t are zero (not estimated)
+	if (isZero(c.t) || isZero(c.R)) {
+		return;
+	}
 
 	Point_3 position(-c.t(0), -c.t(1), -c.t(2));
 	Vector_3 direction(c.direction[0], c.direction[1], c.direction[2]);
