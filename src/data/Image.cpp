@@ -252,6 +252,7 @@ inline void uipf_sfm_image_estimate_focal_length(const map<string, string>& exif
 	}
 
 	// find CCD width in EXIF data
+	// TODO use Resolution if CCD width is not available
 	auto ccd_mm_s = exif.find("CCD width");
 	if (ccd_mm_s == exif.end()) {
 		UIPF_LOG_TRACE("f-estimate: no CCD width in EXIF");
@@ -349,7 +350,10 @@ void Image::loadExif()
 		}
 		exif.insert(pair<string, string>(name, trim(value)));
 	}
+	estimateFocalLengthPrior();
+}
 
+void Image::estimateFocalLengthPrior() {
 	uipf_sfm_image_estimate_focal_length(exif, *this);
 }
 

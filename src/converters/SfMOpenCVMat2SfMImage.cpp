@@ -37,7 +37,12 @@ void SfMOpenCVMat2SfMImage::run() {
 
 	sfmImage->height = image->getContent().rows;
 	sfmImage->width = image->getContent().cols;
-	sfmImage->loadExif();
+	if (image->exif.empty()) {
+		sfmImage->loadExif();
+	} else {
+		sfmImage->exif = image->exif;
+		sfmImage->estimateFocalLengthPrior();
+	}
 
 	setOutputData<Image>("image", sfmImage);
 

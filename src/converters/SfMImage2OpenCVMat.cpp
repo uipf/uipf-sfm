@@ -36,6 +36,7 @@ void SfMImage2OpenCVMat::run() {
 	} else {
 		mat = uipf::data::load_image_color(image->getContent());
 	}
+	mat->exif = image->exif;
 
 	setOutputData<OpenCVMat>("image", mat);
 

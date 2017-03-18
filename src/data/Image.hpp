@@ -77,6 +77,7 @@ namespace uipfsfm {
 
 			std::map<std::string, std::string> exif;
 			void loadExif();
+			void estimateFocalLengthPrior();
 
 
 			// TODO PMVS supports image masks
