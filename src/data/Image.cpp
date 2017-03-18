@@ -32,15 +32,14 @@ std::vector<std::string> Image::visualizations() const
 
 
 // calculate camera field of view
-inline std::tuple<Point_3, Point_3, Point_3, Point_3> uipfsfm_data_image_calculate_fov(
-		const Point_3& position,
-		const Direction_3& direction,
+inline std::tuple<Vector_3, Vector_3, Vector_3, Vector_3> uipfsfm_data_image_calculate_fov(
+		const Vector_3& direction,
         double focalLength,
-        double resolution_x,
-        double resolution_y
+        double ccd_x,
+        double ccd_y
 ) {
 	// create vectors in camera direction and camera plane with length 1
-	Vector_3 dirNormal = direction.vector();
+	Vector_3 dirNormal = direction;
 	dirNormal = dirNormal / sqrt(dirNormal.squared_length());
 	Vector_3 rlNormal = CGAL::cross_product(dirNormal, Vector_3(0, 1, 0));
 	if (rlNormal == CGAL::NULL_VECTOR) {
@@ -54,13 +53,15 @@ inline std::tuple<Point_3, Point_3, Point_3, Point_3> uipfsfm_data_image_calcula
 
 
 	// o = i/f if d=1
-	double ox = resolution_x / focalLength;
-	double oy = resolution_y / focalLength;
+	double ox = ccd_x;
+	double oy = ccd_y;
 
-	Point_3 spanA = position + dirNormal + rlNormal * ox/2 - tbNormal * oy/2;
-	Point_3 spanB = position + dirNormal + rlNormal * ox/2 + tbNormal * oy/2;
-	Point_3 spanC = position + dirNormal - rlNormal * ox/2 + tbNormal * oy/2;
-	Point_3 spanD = position + dirNormal - rlNormal * ox/2 - tbNormal * oy/2;
+	dirNormal = dirNormal * focalLength;
+
+	Vector_3 spanA = dirNormal + rlNormal * ox/2 - tbNormal * oy/2;
+	Vector_3 spanB = dirNormal + rlNormal * ox/2 + tbNormal * oy/2;
+	Vector_3 spanC = dirNormal - rlNormal * ox/2 + tbNormal * oy/2;
+	Vector_3 spanD = dirNormal - rlNormal * ox/2 - tbNormal * oy/2;
 
 	return std::make_tuple(spanA, spanB, spanC, spanD);
 }
@@ -68,49 +69,58 @@ inline std::tuple<Point_3, Point_3, Point_3, Point_3> uipfsfm_data_image_calcula
 
 // TODO move this into a cpp file
 // draw camera for visualization
-inline void uipfsfm_data_image_visualize_camera(uipf::GeomView& gv, const std::string& name, const Image::CameraParameters& c, int w, int h) {
+inline void uipfsfm_data_image_visualize_camera(uipf::GeomView& gv, const std::string& name, const Image::CameraParameters& c, int w, int h, const std::string& texture) {
 
-	Point_3 position(c.t(0), c.t(1), c.t(2));
-	// TODO provide proper direction
-	Direction_3 direction(1, 0, -1);
-	Vector_3 dist = direction.vector();
+	Point_3 position(-c.t(0), -c.t(1), -c.t(2));
+	Vector_3 direction(c.direction[0], c.direction[1], c.direction[2]);
+	Transformation_3 R(
+		c.R(0,0), c.R(0,1), c.R(0,2),
+		c.R(1,0), c.R(1,1), c.R(1,2),
+		c.R(2,0), c.R(2,1), c.R(2,2)
+	);
+	position = R.inverse()(position);
+	direction = R.inverse()(direction);
 
-	int oldw = gv.gv().set_line_width(1);
-	gv.gv() << CGAL::RED;
+//	gv.gv().set_trace(true);
 
-	// print FoV
-	double f = c.f_mm;
-	double ccd = c.ccd_width_mm;
+	// calculate FoV
+	double scale = 10;
+	double f = c.f_mm * scale;
+	double ccd = c.ccd_width_mm * scale;
 	if (f <= 0 || ccd <= 0) {
 		// assume something to still show a camera
-		f = 35;//mm
-		ccd = 2*f;
+		f = 0.035;//m = 35mm
+		ccd = f;
 		UIPF_LOG_TRACE("No camera parameters, assuming some to show a camera");
 	}
 
 	// TODO find some automatic scale for nicer visualisation
-	UIPF_LOG_TRACE("Camera viz: f=",f," ccd=",ccd," pos=",position);
+	UIPF_LOG_TRACE("Camera viz: f=",f," ccd=",ccd," pos=",position, " w=", w, " h=", h);
 
 
-	Point_3 spanA, spanB, spanC, spanD;
-	std::tie(spanA, spanB, spanC, spanD) = uipfsfm_data_image_calculate_fov(position, direction, f, ccd, ccd / w * h);
+	Vector_3 spanA, spanB, spanC, spanD;
+	std::tie(spanA, spanB, spanC, spanD) = uipfsfm_data_image_calculate_fov(direction, f, ccd, ccd / w * h);
+
+	int oldw = gv.gv().set_line_width(1);
+	gv.gv() << CGAL::RED;
+
 
 	Polyhedron Pcam;
 	std::stringstream scam;
 	scam << "OFF\n"
 		<< "5 5 0\n"
 		<< position << "\n"
-		<< (position + (Vector_3(position, spanA) * 100)) << "\n"
-		<< (position + (Vector_3(position, spanB) * 100)) << "\n"
-		<< (position + (Vector_3(position, spanC) * 100)) << "\n"
-		<< (position + (Vector_3(position, spanD) * 100)) << "\n"
+		<< (position + spanA) << "\n"
+		<< (position + spanB) << "\n"
+		<< (position + spanC) << "\n"
+		<< (position + spanD) << "\n"
 		<< "3 0 1 2\n"
 		<< "3 0 2 3\n"
 		<< "3 0 3 4\n"
 		<< "3 0 4 1\n"
 		<< "4 4 3 2 1\n";
 	scam >> Pcam;
-	gv.print_polyhedron(Pcam, true, string("Camera_") + name);
+	gv.print_polyhedron(Pcam, false, string("Camera_") + name /*, texture TODO texture does not work currently */);
 //		gv << Segment_3(position, position + (Vector_3(position, spanA) * 100));
 //		gv << Segment_3(position, position + (Vector_3(position, spanB) * 100));
 //		gv << Segment_3(position, position + (Vector_3(position, spanC) * 100));
@@ -173,7 +183,7 @@ void Image::visualize(std::string option, uipf::VisualizationContext &context) c
 	}
 	if (option.compare("camera 3D") == 0) {
 		// TODO use basename for name
-		uipfsfm_data_image_visualize_camera(*uipf::GeomView::instance(), getContent(), camera, width, height);
+		uipfsfm_data_image_visualize_camera(*uipf::GeomView::instance(), getContent(), camera, width, height, getContent());
 		return;
 	}
 }
@@ -236,6 +246,11 @@ inline void uipf_sfm_image_estimate_focal_length(const map<string, string>& exif
 	sf.imbue(std::locale("C"));
 	sf >> focal_mm;
 
+	if (focal_mm > 0) {
+		focal_mm *= 0.001;
+		image.camera.f_mm = focal_mm;
+	}
+
 	// find CCD width in EXIF data
 	auto ccd_mm_s = exif.find("CCD width");
 	if (ccd_mm_s == exif.end()) {
@@ -252,6 +267,7 @@ inline void uipf_sfm_image_estimate_focal_length(const map<string, string>& exif
 	stringstream sc(ccd_parts[0]);
 	sc.imbue(std::locale("C"));
 	sc >> ccd_width_mm;
+	ccd_width_mm *= 0.001;
 
 	// find Resolution in EXIF data
 	int res_w = 0;

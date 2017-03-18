@@ -36,8 +36,9 @@ namespace uipfsfm {
 
 			typedef struct {
 				// external parameters
-				cv::Matx33d R;     /* Rotation */
-				cv::Vec3d t;     /* Translation */
+				// in  P = K[R T]
+				cv::Matx33d R;   /* Rotation  R */
+				cv::Vec3d t;     /* Translation  t = - RC  ;  C = -R⁻¹t */
 
 				// internal parameters
 				cv::Matx33d K;     /* Internal */
@@ -45,6 +46,11 @@ namespace uipfsfm {
 				double f = -1;            /* Focal length (in pixel) */
 				double f_mm = -1;         /* Focal length (in mm) */
 				double ccd_width_mm = -1; /* CCD width (in mm) */
+
+				// viewing direction
+				// defaults to negative z axis
+				cv::Vec3d direction = {0, 0, -1};
+
 			} CameraParameters;
 			bool hasCameraParameters = false;
 			/**
