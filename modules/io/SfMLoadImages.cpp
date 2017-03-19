@@ -30,6 +30,8 @@ void SfMLoadImages::run() {
 	float focalLength = getParam<float>("focalLength", -1);
 
 	vector<string> images = uipf::data::load_image_names(path);
+	updateProgress(0, (int) images.size());
+	int i = 0;
 	for(string img: images) {
 		UIPF_LOG_DEBUG("loading image: ", img);
 		Image::ptr image(new Image(img));
@@ -43,6 +45,7 @@ void SfMLoadImages::run() {
 
 			list->getContent().push_back(image);
 		}
+		updateProgress(++i, (int) images.size());
 	}
 	setOutputData<List>("images", list);
 }
