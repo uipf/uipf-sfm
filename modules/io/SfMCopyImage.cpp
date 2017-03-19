@@ -2,9 +2,9 @@
 
 #include <boost/filesystem.hpp>
 
-#define UIPF_MODULE_ID "cebe.sfm.copy_image"
+#define UIPF_MODULE_ID "uipfsfm.io.copy_image"
 #define UIPF_MODULE_NAME "SfM Copy Image"
-#define UIPF_MODULE_CATEGORY "sfm"
+#define UIPF_MODULE_CATEGORY "sfm.io"
 #define UIPF_MODULE_CLASS SfMCopyImage
 
 #define UIPF_MODULE_INPUTS \

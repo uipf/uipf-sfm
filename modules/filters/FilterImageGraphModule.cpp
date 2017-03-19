@@ -9,10 +9,10 @@
 #include "data/ImageGraph.hpp"
 
 // TODO move this out of keypoint section WIP
-#define UIPF_MODULE_NAME "Filter Image Graph"
-#define UIPF_MODULE_ID "cebe.sfm.filter_image_graph"
+#define UIPF_MODULE_NAME "Filter Matches in Image Graph"
+#define UIPF_MODULE_ID "uipfsfm.filter.filter_matches"
 #define UIPF_MODULE_CLASS FilterImageGraphModule
-#define UIPF_MODULE_CATEGORY "sfm"
+#define UIPF_MODULE_CATEGORY "sfm.filters"
 
 #define UIPF_MODULE_INPUTS \
 		{"imageGraph", uipf::DataDescription(uipfsfm::data::ImageGraph::id(), "the image graph.")}

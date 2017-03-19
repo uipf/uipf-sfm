@@ -4,10 +4,10 @@
 
 #include "data/Image.hpp"
 
-#define UIPF_MODULE_NAME "SfMImage2OpenCVMat"
-#define UIPF_MODULE_ID "cebe.sfm.converters.SfMImage2OpenCVMat"
+#define UIPF_MODULE_NAME "SfMImage to OpenCVMat"
+#define UIPF_MODULE_ID "uipfsfm.io.sfm_image2opencv_mat"
 #define UIPF_MODULE_CLASS SfMImage2OpenCVMat
-#define UIPF_MODULE_CATEGORY "sfm.converters"
+#define UIPF_MODULE_CATEGORY "sfm.io"
 
 #define UIPF_MODULE_INPUTS \
 		{"image", uipf::DataDescription(uipf::data::OpenCVMat::id(), "the input image.")}

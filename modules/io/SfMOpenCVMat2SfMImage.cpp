@@ -6,10 +6,10 @@
 
 // TODO rename this file
 
-#define UIPF_MODULE_NAME "OpenCVMat2SfMImage"
-#define UIPF_MODULE_ID "cebe.sfm.converters.OpenCVMat2SfMImage"
+#define UIPF_MODULE_NAME "OpenCVMat to SfMImage"
+#define UIPF_MODULE_ID "uipfsfm.io.opencv_mat2sfm_image"
 #define UIPF_MODULE_CLASS SfMOpenCVMat2SfMImage
-#define UIPF_MODULE_CATEGORY "sfm.converters"
+#define UIPF_MODULE_CATEGORY "sfm.io"
 
 #define UIPF_MODULE_INPUTS \
 		{"image", uipf::DataDescription(uipf::data::OpenCVMat::id(), "the input image.")}

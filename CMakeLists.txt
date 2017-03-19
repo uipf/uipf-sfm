@@ -37,13 +37,16 @@ message("uipf-geomview: ${uipf-geomview}")
 
 include_directories(${PROJECT_SOURCE_DIR}/lib)
 include_directories(${PROJECT_SOURCE_DIR}/lib/libply)
-include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR})
+
+add_subdirectory(modules)
+add_subdirectory(lib/libply)
 
 
 add_library(uipf-sfm SHARED
-	src/data/Image.cpp
-	src/data/ImageGraph.cpp
-	src/data/PointCloud.cpp
+	data/Image.cpp
+	data/ImageGraph.cpp
+	data/PointCloud.cpp
 )
 set_target_properties(uipf-sfm PROPERTIES
 	SOVERSION 1.0
@@ -51,14 +54,6 @@ set_target_properties(uipf-sfm PROPERTIES
 )
 target_link_libraries(uipf-sfm ${uipf-geomview} opencv_core opencv_features2d uipf-sfm-libply)
 
-add_subdirectory(modules)
-
-# Point detectors
-add_subdirectory(src/converters)
-add_subdirectory(src/point-detectors)
-add_subdirectory(src/point-descriptors)
-add_subdirectory(lib/libply)
-#add_subdirectory(lib/ply)
 
 option(WITH_TESTS "Build test binaries and enable `make test` target" ON)
 if(WITH_TESTS)

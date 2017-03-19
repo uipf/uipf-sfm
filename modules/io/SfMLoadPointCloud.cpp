@@ -2,9 +2,9 @@
 
 #include <fstream>
 
-#define UIPF_MODULE_ID "cebe.sfm.load_pointcloud"
+#define UIPF_MODULE_ID "uipfsfm.io.load_pointcloud"
 #define UIPF_MODULE_NAME "SfM Load PointCloud"
-#define UIPF_MODULE_CATEGORY "sfm"
+#define UIPF_MODULE_CATEGORY "sfm.io"
 #define UIPF_MODULE_CLASS SfMLoadPointCloud
 
 #define UIPF_MODULE_OUTPUTS \

@@ -19,8 +19,6 @@ target_link_libraries(ViewKeyPointsModule ${ModuleBase} opencv_core opencv_highg
 add_library(ViewImageGraphModule SHARED ViewImageGraphModule.cpp)
 target_link_libraries(ViewImageGraphModule ${ModuleBase} opencv_core opencv_highgui opencv_imgproc opencv_features2d)
 
-add_library(FilterImageGraphModule SHARED FilterImageGraphModule.cpp)
-target_link_libraries(FilterImageGraphModule ${ModuleBase} opencv_core opencv_highgui opencv_imgproc opencv_features2d)
 
 # installation targets
 install(TARGETS

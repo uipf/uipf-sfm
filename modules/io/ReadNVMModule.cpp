@@ -3,7 +3,7 @@
 #include <fstream>
 
 #define UIPF_MODULE_NAME "Read Image Graph from NVM file"
-#define UIPF_MODULE_ID "cebe.sfm.read_image_graph_nvm"
+#define UIPF_MODULE_ID "uipfsfm.io.read_image_graph_nvm"
 #define UIPF_MODULE_CLASS ReadNVMImageGraphModule
 #define UIPF_MODULE_CATEGORY "sfm.io"
 

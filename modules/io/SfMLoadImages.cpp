@@ -3,9 +3,9 @@
 
 #include "data/Image.hpp"
 
-#define UIPF_MODULE_ID "cebe.sfm.load_images"
+#define UIPF_MODULE_ID "uipfsfm.io.load_images"
 #define UIPF_MODULE_NAME "SfM Load Images"
-#define UIPF_MODULE_CATEGORY "sfm"
+#define UIPF_MODULE_CATEGORY "sfm.io"
 #define UIPF_MODULE_CLASS SfMLoadImages
 
 #define UIPF_MODULE_OUTPUTS \

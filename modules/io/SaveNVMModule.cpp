@@ -1,7 +1,7 @@
 #include "data/ImageGraph.hpp"
 
 #define UIPF_MODULE_NAME "Save Image Graph to NVM file"
-#define UIPF_MODULE_ID "cebe.sfm.save_image_graph_nvm"
+#define UIPF_MODULE_ID "uipfsfm.io.save_image_graph_nvm"
 #define UIPF_MODULE_CLASS SaveNVMImageGraphModule
 #define UIPF_MODULE_CATEGORY "sfm.io"
 
