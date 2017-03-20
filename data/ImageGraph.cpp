@@ -22,7 +22,7 @@ std::vector<std::string> ImageGraph::visualizations() const {
 	// TODO do not offer this option if graphviz is not installed
 	v.push_back("graph");
 	for(auto img: images) {
-		if (img.second->hasCameraParameters) {
+		if (img.second && img.second->hasCameraParameters) {
 			v.push_back("cameras 3D");
 			break;
 		}

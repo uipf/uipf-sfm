@@ -47,24 +47,25 @@ void SfMOpenCVFlannBasedMatcher::run()
 	updateProgress(0, icount);
 	for(int i = 0; i < icount; ++i) {
 		Image::ptr image = static_pointer_cast<Image>(list[i]);
-		assert(image->hasKeyPoints && image->keypoints->descriptors.size() > 0);
+		UIPF_ASSERT(image->hasKeyPoints && image->keypoints->descriptors.size() > 0);
 		int descrSize = image->keypoints->descriptors[0]->cols;
 		int type = image->keypoints->descriptors[0]->type();
 
 		descriptors[i] = cv::Mat((int)image->keypoints->descriptors.size(), descrSize, type);
 		int k = 0;
 		for(cv::Mat* dm: image->keypoints->descriptors) {
-			assert(dm->type() == type && dm->rows == 1 && dm->cols == descrSize);
+			UIPF_ASSERT(dm->type() == type && dm->rows == 1 && dm->cols == descrSize);
 			dm->copyTo(descriptors[i].row(k++));
 		}
-		// TODO this seems to fix FLANN, not sure why
-		//descriptors[i].convertTo(descriptors[i], CV_32F);
+		// convert to floating point to allow distance computation via L2 (eucledian distance)
+		descriptors[i].convertTo(descriptors[i], CV_32F);
+
 		updateProgress(i, icount);
 
 		UIPF_LOG_DEBUG(image->getName());
 		for(int di = 0; di < descriptors[i].rows && di < 12; ++di) {
 			for(int dj = 0; dj < descriptors[i].cols; ++dj) {
-				std::cout << ((int)descriptors[i].at<uint8_t>(di,dj)) << " ";
+				std::cout << ((float)descriptors[i].at<float>(di,dj)) << " ";
 			}
 			std::cout << std::endl;
 		}
