@@ -17,6 +17,8 @@ namespace uipfsfm {
 			// TODO free descriptor memory in destructor
 			std::vector<cv::Mat*> descriptors;
 
+			std::vector<cv::Point2f> getSimplePoints();
+
 			void print(bool verbose = false) {
 
 				const std::vector<cv::KeyPoint>& keyPoints = getContent();

@@ -39,6 +39,31 @@ add_library(SfMLoadPointCloud SHARED io/SfMLoadPointCloud.cpp)
 target_link_libraries(SfMLoadPointCloud ${ModuleBase} uipf-sfm)
 
 
+#
+# Keypoints
+#
+
+add_library(SfMFREAKModule SHARED keypoints/opencv/SfMFREAKModule.cpp)
+target_link_libraries(SfMFREAKModule ${ModuleBase} opencv_core opencv_features2d)
+
+add_library(SfMFASTModule SHARED keypoints/opencv/SfMFASTModule.cpp)
+target_link_libraries(SfMFASTModule ${ModuleBase} opencv_core opencv_features2d)
+
+add_library(SfMORBModule SHARED keypoints/opencv/SfMORBModule.cpp)
+target_link_libraries(SfMORBModule ${ModuleBase} opencv_core opencv_features2d)
+
+#
+# Keypoint Matchers
+#
+
+add_library(SfMFlannBasedMatcherModule SHARED keypoints/opencv/SfMFlannBasedMatcherModule.cpp)
+target_link_libraries(SfMFlannBasedMatcherModule ${ModuleBase} opencv_core opencv_features2d)
+
+add_library(SfMRANSACFilter SHARED keypoints/opencv/SfMRANSACFilter.cpp)
+target_link_libraries(SfMRANSACFilter ${ModuleBase} opencv_core opencv_features2d opencv_calib3d)
+
+
+
 # installation targets
 install(TARGETS
 	# filters
@@ -55,6 +80,15 @@ install(TARGETS
 	SfMCopyImage
 
 	SfMLoadPointCloud
+
+	# Keypoints
+	SfMFREAKModule
+	SfMFASTModule
+	SfMORBModule
+
+	# Keypoint Matchers
+	SfMFlannBasedMatcherModule
+	SfMRANSACFilter
 
 	LIBRARY DESTINATION lib/uipf
 	ARCHIVE DESTINATION lib/uipf

@@ -58,6 +58,9 @@ namespace uipfsfm {
 			 */
 			CameraParameters camera;
 
+
+			virtual std::string getName() const;
+
 			/**
 			 * @return a list of visualization options.
 			 */

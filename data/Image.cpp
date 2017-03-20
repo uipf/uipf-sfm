@@ -326,6 +326,10 @@ inline void uipf_sfm_image_estimate_focal_length(const map<string, string>& exif
 
 void Image::loadExif()
 {
+	if (uipf_str_ends_with(uipf_str_to_lower(getContent()), "png") || uipf_str_ends_with(uipf_str_to_lower(getContent()), "pgm")) {
+		return;
+	}
+
 	string output;
 	try {
 		output = uipf_exec_stdout((string("jhead ") + getContent()).c_str());
@@ -373,6 +377,10 @@ void Image::loadExif()
 
 void Image::estimateFocalLengthPrior() {
 	uipf_sfm_image_estimate_focal_length(exif, *this);
+}
+
+std::string Image::getName() const {
+	return getContent();
 }
 
 

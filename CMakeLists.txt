@@ -45,7 +45,9 @@ add_subdirectory(lib/libply)
 
 add_library(uipf-sfm SHARED
 	data/Image.cpp
+	data/ImagePair.cpp
 	data/ImageGraph.cpp
+	data/KeyPointList.cpp
 	data/PointCloud.cpp
 )
 set_target_properties(uipf-sfm PROPERTIES

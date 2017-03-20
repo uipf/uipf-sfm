@@ -21,6 +21,8 @@ namespace uipfsfm {
 			std::map<std::string, uipf::Data::ptr> data;
 
 
+			virtual std::string getName() const;
+
 			/**
 			 * @return a list of visualization options.
 			 */
@@ -47,30 +49,36 @@ namespace uipfsfm {
 						throw uipf::ErrorException(std::string("failed to load file: ") + imageB->getContent());
 					}
 
-					// image must be the same type otherwise we can not be sure to display them
-					// TODO maybe add some conversion here? unlikely to happen though
-					assert(mA.type() == mB.type());
-
-					cv::Mat viz(std::max(mA.rows, mB.rows), mA.cols + mB.cols, mA.type());
-					mA.copyTo(viz(cv::Rect(0, 0, mA.cols, mA.rows)));
-					mB.copyTo(viz(cv::Rect(mA.cols, 0, mB.cols, mB.rows)));
-
 					if (option.compare("point matches") == 0 && hasKeyPointMatches) {
-						// draw matches
+
+						std::vector<cv::DMatch> matches;
 						uipf_cforeach(match, keyPointMatches) {
-
-							cv::KeyPoint kA = imageA->keypoints->getContent()[match->first];
-							cv::KeyPoint kB = imageB->keypoints->getContent()[match->second];
-							cv::Point pB = kB.pt;
-							pB.x += mA.cols;
-							cv::line(viz, kA.pt, pB, cv::Scalar(0, 255, 0));
-
+							matches.push_back(cv::DMatch(match->first, match->second, 0));
 						}
+
+						cv::Mat viz;
+						cv::drawMatches(
+								mA, imageA->keypoints->getContent(),
+								mB, imageB->keypoints->getContent(),
+								matches, viz, cv::Scalar::all(-1), cv::Scalar::all(-1),
+								std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS
+						);
+
+						context.displayImage(viz);
+					} else {
+						// image must be the same type otherwise we can not be sure to display them
+						// TODO maybe add some conversion here? unlikely to happen though
+						assert(mA.type() == mB.type());
+
+						cv::Mat viz(std::max(mA.rows, mB.rows), mA.cols + mB.cols, mA.type());
+						mA.copyTo(viz(cv::Rect(0, 0, mA.cols, mA.rows)));
+						mB.copyTo(viz(cv::Rect(mA.cols, 0, mB.cols, mB.rows)));
+
+						context.displayImage(viz);
 					}
 
 					// TODO optional cv::drawKeypoints(img, points->getContent(), img, cv::Scalar(0,0,255), cv::DrawMatchesFlags::DRAW_OVER_OUTIMG + cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
-					context.displayImage(viz);
 				}
 
 			};
