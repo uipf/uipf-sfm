@@ -22,7 +22,7 @@
 		{"firstLevel", uipf::ParamDescription("See OpenCV docs for details. Defaults to 0.", true) }, \
 		{"WTA_K", uipf::ParamDescription("See OpenCV docs for details. Defaults to 2.", true) }, \
 		{"scoreType", uipf::ParamDescription("HARRIS_SCORE or FAST_SCORE. See OpenCV docs for details. Defaults to HARRIS.", true) }, \
-		{"patchSize", uipf::ParamDescription("See OpenCV docs for details. Defaults to 31.", true) }, \
+		{"patchSize", uipf::ParamDescription("See OpenCV docs for details. Defaults to 31.", true) }
 
 #include <uipf/Module.hpp>
 

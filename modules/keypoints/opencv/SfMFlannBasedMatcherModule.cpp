@@ -14,9 +14,8 @@
 #define UIPF_MODULE_OUTPUTS \
 		{"imageGraph", uipf::DataDescription(uipfsfm::data::ImageGraph::id(), "the image graph of matches.")}
 
-//#define UIPF_MODULE_PARAMS \
-//		{"patternScale", uipf::ParamDescription("See OpenCV docs for details. Defaults to 22.0", true) }, \
-//		{"nOctaves", uipf::ParamDescription("See OpenCV docs for details. Defaults to 4.", true) }
+#define UIPF_MODULE_PARAMS \
+		{"minRatio", uipf::ParamDescription("minRatio for the Loewe ratio test. Defaults to 0.8.", true) }
 
 #include <uipf/Module.hpp>
 
@@ -33,6 +32,7 @@ void SfMOpenCVFlannBasedMatcher::run()
 	using namespace uipfsfm::data;
 	using namespace std;
 
+	double minRatio = getParam<double>("minRatio", 0.8);
 
 	List::ptr images = getInputData<List>("images");
 	vector<Data::ptr> list = images->getContent();

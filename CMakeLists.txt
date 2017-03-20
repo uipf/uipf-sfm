@@ -19,6 +19,8 @@ message("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message("CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
 
+option(ENABLE_NONFREE "Enable compilation of NON FREE/PATENT PROTECTED code. Make sure to read the COPYRIGHT note in sift.cpp and surf.cpp before enabling this!" OFF)
+
 # find libuipf-module
 # search in normal system paths as well as installation prefix for installation as unprivileged user.
 find_library(

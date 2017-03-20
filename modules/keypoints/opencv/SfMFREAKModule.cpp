@@ -38,7 +38,7 @@ void SfMOpenCVFREAK::run() {
 		throw ErrorException("Image has no keypoints attached.");
 	}
 
-	cv::Mat m = cv::imread(image->getContent());
+	cv::Mat m = cv::imread(image->getContent(), CV_LOAD_IMAGE_GRAYSCALE);
 
 	// initialize FREAK detector class, always normalize for scale and orientation,
 	// as not doing so does not make sense in SfM approach

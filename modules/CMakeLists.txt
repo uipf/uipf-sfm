@@ -52,6 +52,13 @@ target_link_libraries(SfMFASTModule ${ModuleBase} opencv_core opencv_features2d)
 add_library(SfMORBModule SHARED keypoints/opencv/SfMORBModule.cpp)
 target_link_libraries(SfMORBModule ${ModuleBase} opencv_core opencv_features2d)
 
+if (ENABLE_NONFREE)
+	add_library(SfMSIFTModule SHARED keypoints/opencv/SfMSIFTModule.cpp)
+	target_link_libraries(SfMSIFTModule ${ModuleBase} opencv_core opencv_features2d)
+	add_library(SfMSURFModule SHARED keypoints/opencv/SfMSURFModule.cpp)
+	target_link_libraries(SfMSURFModule ${ModuleBase} opencv_core opencv_features2d)
+endif()
+
 #
 # Keypoint Matchers
 #
@@ -94,3 +101,11 @@ install(TARGETS
 	ARCHIVE DESTINATION lib/uipf
 )
 
+if (ENABLE_NONFREE)
+	install(TARGETS
+		SfMSIFTModule
+		SfMSURFModule
+	LIBRARY DESTINATION lib/uipf
+	ARCHIVE DESTINATION lib/uipf
+	)
+endif()
