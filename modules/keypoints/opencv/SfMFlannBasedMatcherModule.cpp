@@ -87,25 +87,47 @@ void SfMOpenCVFlannBasedMatcher::run()
 		for(int j = i + 1; j < icount; ++j) {
 			Image::ptr imageB = static_pointer_cast<Image>(list[j]);
 
-			// http://stackoverflow.com/questions/23634730/opencv-flann-matcher-crashes#23639463
-			cv::Ptr<cv::flann::IndexParams> params;
-			switch (descriptors[i].type()) {
-				default:
-				case CV_32F:
-					params = new cv::flann::KDTreeIndexParams(4);
-					UIPF_LOG_DEBUG("using KD Tree Index");
-					break;
-				case CV_8U:
-					params = new cv::flann::HierarchicalClusteringIndexParams();
-					UIPF_LOG_DEBUG("using HierarchicalClustering Index");
-					break;
-			}
-			cv::BFMatcher matcher;
-			// TODO flann crashes, using bruteforce matcher for now
-//			cv::FlannBasedMatcher matcher(params);
-
 			std::vector< cv::DMatch > matches;
-			matcher.match( descriptors[j], descriptors[i], matches );
+
+			bool useBruteforce = false;
+			if (useBruteforce) {
+				cv::BFMatcher matcher;
+				matcher.match( descriptors[j], descriptors[i], matches );
+			} else {
+				// http://stackoverflow.com/questions/23634730/opencv-flann-matcher-crashes#23639463
+				cv::Ptr<cv::flann::IndexParams> indexParams;
+				cv::Ptr<cv::flann::SearchParams> searchParams = new cv::flann::SearchParams(50);
+				switch (descriptors[i].type()) {
+					default:
+					case CV_32F:
+						indexParams = new cv::flann::KDTreeIndexParams(5);
+						UIPF_LOG_DEBUG("using KD Tree Index");
+						break;
+					case CV_8U:
+						indexParams = new cv::flann::HierarchicalClusteringIndexParams();
+						UIPF_LOG_DEBUG("using HierarchicalClustering Index");
+						break;
+				}
+				// based on
+				// http://docs.opencv.org/master/da/de9/tutorial_py_epipolar_geometry.html
+				// http://docs.opencv.org/2.4/doc/tutorials/features2d/feature_flann_matcher/feature_flann_matcher.html
+
+				cv::FlannBasedMatcher matcher(indexParams, searchParams);
+//				matcher.match( descriptors[j], descriptors[i], matches );
+				std::vector< std::vector< cv::DMatch > > knnmatches;
+
+				matcher.knnMatch( descriptors[j], descriptors[i], knnmatches, 2 );
+				// ratio test by Loewe
+				for (std::vector< cv::DMatch > mm: knnmatches) {
+					const cv::DMatch& bestMatch = mm[0];
+					const cv::DMatch& betterMatch = mm[1];
+					float distanceRatio = bestMatch.distance / betterMatch.distance;
+					if (distanceRatio < minRatio) {
+						matches.push_back(bestMatch);
+					}
+				}
+			}
+
 
 //			UIPF_LOG_INFO(imageA->getName(), " - ", imageB->getName(), ": matches: ", matches.size());
 
@@ -123,14 +145,16 @@ void SfMOpenCVFlannBasedMatcher::run()
 
 			ImagePair::ptr imagePair(new ImagePair(pair<Image::ptr, Image::ptr>(imageA, imageB)));
 			for(cv::DMatch match: matches) {
-				if ( match.distance > max(2*dist_min, 0.02) ) {
+				// only keep matches that are within 10% of the overall range
+				// TODO improve, max should not be relevant at all.
+				if ( match.distance > dist_min + 0.35 * (dist_max - dist_min) ) { //|| match.distance > 0.5 * dist_max) {
 					continue;
 				}
 				imagePair->keyPointMatches.push_back(pair<int, int>(match.trainIdx, match.queryIdx));
 			}
 			UIPF_LOG_INFO(imageA->getName(), " - ", imageB->getName(), ": good matches: ", imagePair->keyPointMatches.size());
 			imagePair->hasKeyPointMatches = true;
-			if (imagePair->keyPointMatches.size() > 12) { // TODO magic number
+			if (imagePair->keyPointMatches.size() >= 8) {
 				imageGraph->getContent().push_back(imagePair);
 				// set output data for early inspection
 				setOutputData<ImageGraph>("imageGraph", imageGraph);

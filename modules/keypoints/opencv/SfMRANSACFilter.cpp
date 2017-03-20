@@ -36,7 +36,11 @@ void SfMOpenCVRANSACFilter::run()
 	int pairscount = (int) pairs.size();
 	int i = 0;
 	updateProgress(i, pairscount);
+	std::vector<ImagePair::ptr> newPairs;
 	for(ImagePair::ptr imagePair: pairs) {
+
+		UIPF_ASSERT(imagePair->getContent().first->hasKeyPoints);
+		UIPF_ASSERT(imagePair->getContent().second->hasKeyPoints);
 
 		std::vector<cv::Point2f> allPointsA = imagePair->getContent().first->keypoints->getSimplePoints();
 		std::vector<cv::Point2f> allPointsB = imagePair->getContent().second->keypoints->getSimplePoints();
@@ -61,9 +65,29 @@ void SfMOpenCVRANSACFilter::run()
 			}
 		}
 		imagePair->keyPointMatches = newMatches;
-		UIPF_LOG_INFO("Estimated F, removed ", outliercount, " outliers");
+		UIPF_LOG_INFO("Estimated F, removed ", outliercount, " outliers, ", F.type());
+		UIPF_LOG_INFO(F.at<float>(0,0), " ", F.at<float>(0,1), " ", F.at<float>(0,2), "\n",
+				F.at<float>(1,0), " ", F.at<float>(1,1), " ", F.at<float>(1,2), "\n",
+				F.at<float>(2,0), " ", F.at<float>(2,1), " ", F.at<float>(2,2), "\n"
+		);
+		F.copyTo(imagePair->F);
+		imagePair->hasF = true;
+
+		// remove pair if count of matching points pairs < 8
+		if (imagePair->keyPointMatches.size() >= 8) {
+
+			// C++: void computeCorrespondEpilines(InputArray points, int whichImage, InputArray F, OutputArray lines)¶
+			// remove if error to epipolar lines is too big
+
+			newPairs.push_back(imagePair);
+		} else {
+			UIPF_LOG_INFO("Removing image pair with < 8 matches: ", imagePair->getName());
+		}
+
 		updateProgress(++i, pairscount);
 	}
+
+	imageGraph->setContent(newPairs);
 
 	setOutputData<ImageGraph>("imageGraph", imageGraph);
 
