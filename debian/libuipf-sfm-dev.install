@@ -1,5 +1,5 @@
-usr/include/uipf-sfm/data/ImageGraph.hpp
 usr/include/uipf-sfm/data/Image.hpp
+usr/include/uipf-sfm/data/ImageGraph.hpp
 usr/include/uipf-sfm/data/ImagePair.hpp
 usr/include/uipf-sfm/data/KeyPointList.hpp
 usr/include/uipf-sfm/data/PointCloud.hpp
