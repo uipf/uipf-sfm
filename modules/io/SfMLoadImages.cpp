@@ -37,6 +37,8 @@ void SfMLoadImages::run() {
 		Image::ptr image(new Image(img));
 		image->camera.f = focalLength;
 
+		// TODO this could be massively speed up by reading file headers
+		// http://stackoverflow.com/questions/111345/getting-image-dimensions-without-reading-the-entire-file
 		cv::Mat m = cv::imread(img);
 		if (m.data) {
 			image->height = m.rows;
