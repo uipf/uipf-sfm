@@ -66,7 +66,7 @@ if(WITH_TESTS)
 endif()
 
 
-install(DIRECTORY ${uipf-sfm_SOURCE_DIR}/src/data
+install(DIRECTORY ${uipf-sfm_SOURCE_DIR}/data
 		DESTINATION include/uipf-sfm
 		FILES_MATCHING PATTERN "*.hpp"
 )
