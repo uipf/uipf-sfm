@@ -7,8 +7,8 @@ usr/lib/libuipf-sfm-libply.so.0.1
 
 usr/lib/uipf/libSfMFilterImageGraphModule.so
 
-usr/lib/uipf/SfMReadNVMModule.so
-usr/lib/uipf/SfMSaveNVMModule.so
+usr/lib/uipf/libSfMReadNVMModule.so
+usr/lib/uipf/libSfMSaveNVMModule.so
 
 usr/lib/uipf/libSfMOpenCVMat2ImageModule.so
 usr/lib/uipf/libSfMImage2OpenCVMatModule.so
@@ -19,9 +19,9 @@ usr/lib/uipf/libSfMCopyImage.so
 usr/lib/uipf/libSfMLoadPointCloud.so
 usr/lib/uipf/libSfMStorePointCloud.so
 
-usr/lib/uipf/SfMFREAKModule.so
-usr/lib/uipf/SfMFASTModule.so
-usr/lib/uipf/SfMORBModule.so
+usr/lib/uipf/libSfMFREAKModule.so
+usr/lib/uipf/libSfMFASTModule.so
+usr/lib/uipf/libSfMORBModule.so
 
-usr/lib/uipf/SfMFlannBasedMatcherModule.so
-usr/lib/uipf/SfMRANSACFilter.so
+usr/lib/uipf/libSfMFlannBasedMatcherModule.so
+usr/lib/uipf/libSfMRANSACFilter.so
