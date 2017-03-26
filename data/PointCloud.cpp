@@ -64,9 +64,57 @@ bool PointCloud::isSerializable() const
 	return true;
 }
 
-void PointCloud::serialize(std::ostream& s) const
+void PointCloud::serialize(std::ostream& s, const std::string& color_prefix) const
 {
-	throw uipf::ErrorException("serialize() is not yet implemented.");
+	// std::stof() is locale aware, meaning params are not portable between platforms
+	// the following is a locale independend stof():
+	s.imbue(std::locale("C"));
+
+	s << "ply\n";
+	s << "format ascii 1.0\n";
+	s << "element vertex " <<  getContent().size() << "\n";
+
+	s << "property float x\n";
+	s << "property float y\n";
+	s << "property float z\n";
+
+	bool has_normals = false;
+	if (normals.size() > 0) {
+		assert(normals.size() == getContent().size());
+
+		has_normals = true;
+
+		s << "property float nx\n";
+		s << "property float ny\n";
+		s << "property float nz\n";
+	}
+
+	bool has_color = false;
+	if (colors.size() > 0) {
+		assert(colors.size() == getContent().size());
+
+		has_color = true;
+
+		s << "property uchar " << color_prefix << "red\n";
+		s << "property uchar " << color_prefix << "green\n";
+		s << "property uchar " << color_prefix << "blue\n";
+	}
+
+	s << "end_header\n";
+
+	const std::vector<cv::Point3d>& points = getContent();
+	size_t ps = points.size();
+	for(size_t i = 0; i < ps; ++i) {
+		s << points[i].x << " " << points[i].y << " " << points[i].z;
+		if (has_normals) {
+			s << " " << normals[i](0) << " " << normals[i](1) << " " << normals[i](2);
+		}
+		if (has_color) {
+			s << " " << colors[i](0) << " " << colors[i](1) << " " << colors[i](2);
+		}
+		s << "\n";
+	}
+
 }
 
 

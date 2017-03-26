@@ -27,7 +27,7 @@ namespace uipfsfm {
 
 			// serialization, allow reading from files and writing to files
 			// or other string transport
-			virtual void serialize(std::ostream&) const;
+			virtual void serialize(std::ostream&, const std::string& color_prefix = std::string("diffuse_")) const;
 			// unserialize constructor
 			PointCloud(std::istream&);
 
