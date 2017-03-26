@@ -56,7 +56,7 @@ set_target_properties(uipf-sfm PROPERTIES
 	SOVERSION 1.0
 	VERSION 1.0.0
 )
-target_link_libraries(uipf-sfm ${uipf-geomview} opencv_core opencv_features2d opencv_calib3d uipf-sfm-libply)
+target_link_libraries(uipf-sfm ${uipf-geomview} opencv_core opencv_features2d opencv_calib3d uipf-sfm-libply boost_filesystem boost_system)
 
 
 option(WITH_TESTS "Build test binaries and enable `make test` target" ON)
