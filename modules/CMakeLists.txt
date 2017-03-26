@@ -5,7 +5,7 @@ project(uipf-sfm-modules)
 #
 
 add_library(SfMFilterImageGraphModule SHARED filters/FilterImageGraphModule.cpp)
-target_link_libraries(SfMFilterImageGraphModule ${ModuleBase} opencv_core opencv_highgui opencv_imgproc opencv_features2d)
+target_link_libraries(SfMFilterImageGraphModule ${ModuleBase} opencv_core opencv_highgui opencv_imgproc opencv_features2d boost_filesystem boost_system)
 
 
 #
@@ -13,7 +13,7 @@ target_link_libraries(SfMFilterImageGraphModule ${ModuleBase} opencv_core opencv
 #
 
 add_library(SfMReadNVMModule SHARED io/ReadNVMModule.cpp)
-target_link_libraries(SfMReadNVMModule ${ModuleBase})
+target_link_libraries(SfMReadNVMModule ${ModuleBase} boost_filesystem boost_system)
 
 add_library(SfMSaveNVMModule SHARED io/SaveNVMModule.cpp)
 target_link_libraries(SfMSaveNVMModule ${ModuleBase})
@@ -47,13 +47,13 @@ target_link_libraries(SfMStorePointCloud ${ModuleBase} uipf-sfm)
 #
 
 add_library(SfMFREAKModule SHARED keypoints/opencv/SfMFREAKModule.cpp)
-target_link_libraries(SfMFREAKModule ${ModuleBase} opencv_core opencv_features2d)
+target_link_libraries(SfMFREAKModule ${ModuleBase} opencv_core opencv_features2d boost_filesystem boost_system)
 
 add_library(SfMFASTModule SHARED keypoints/opencv/SfMFASTModule.cpp)
 target_link_libraries(SfMFASTModule ${ModuleBase} opencv_core opencv_features2d)
 
 add_library(SfMORBModule SHARED keypoints/opencv/SfMORBModule.cpp)
-target_link_libraries(SfMORBModule ${ModuleBase} opencv_core opencv_features2d)
+target_link_libraries(SfMORBModule ${ModuleBase} opencv_core opencv_features2d boost_filesystem boost_system)
 
 if (ENABLE_NONFREE)
 	add_library(SfMSIFTModule SHARED keypoints/opencv/SfMSIFTModule.cpp)
