@@ -2,6 +2,7 @@
 
 #include <opencv2/features2d/features2d.hpp>
 #include <boost/filesystem.hpp>
+#include <fstream>
 
 #define UIPF_MODULE_ID "uipfsfm.keypoint.surf"
 #define UIPF_MODULE_NAME "OpenCV SURF Keypoint Detector and Descriptor"
@@ -39,6 +40,10 @@
  * If the image has keypoints, it computes the descriptors only.
  * If you only want to compute the detection, set the parameter.
  *
+ * **Note: This code is protected by patent. You may not use it without permission!**
+ * Please refer to the following website for license details and contact information:
+ *
+ * <http://www.vision.ee.ethz.ch/~surf/>
  *
  * http://docs.opencv.org/2.4.13.2/modules/nonfree/doc/feature_detection.html#surf-surf
  */
