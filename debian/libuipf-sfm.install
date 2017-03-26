@@ -17,6 +17,7 @@ usr/lib/uipf/libSfMLoadImagesModule.so
 usr/lib/uipf/libSfMCopyImage.so
 
 usr/lib/uipf/libSfMLoadPointCloud.so
+usr/lib/uipf/libSfMStorePointCloud.so
 
 usr/lib/uipf/SfMFREAKModule.so
 usr/lib/uipf/SfMFASTModule.so

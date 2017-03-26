@@ -15,7 +15,7 @@ int main() {
 	assert(s1.str() == string("0 128\n"));
 
 	keyPointList->setContent(vector<cv::KeyPoint>());
-	keyPointList->getContent().push_back(cv::KeyPoint(45, 54, 3.45, 90));
+	keyPointList->getContent().push_back(cv::KeyPoint(54, 45, 3.45, 90));
 	cv::Mat* descriptor = new cv::Mat(1, 128, CV_8U);
 	uint8_t d = 0;
 	for(int v = 0; v < 128; ++v) {
@@ -41,8 +41,8 @@ int main() {
 	assert(keyPointList3->getContent().size() == 1);
 	assert(keyPointList3->descriptors.size() == 1);
 	cv::KeyPoint kp3 = keyPointList3->getContent()[0];
-	assert(kp3.pt.x == 45);
-	assert(kp3.pt.y == 54);
+	assert(kp3.pt.x == 54);
+	assert(kp3.pt.y == 45);
 	assert(fabs(kp3.size - 3.45) < 0.0001);
 	assert(fabs(kp3.angle - 90) < 0.0001);
 
@@ -59,14 +59,14 @@ int main() {
 	assert(keyPointList4->descriptors.size() == 0);
 
 	cv::KeyPoint kp4a = keyPointList4->getContent()[0];
-	assert(kp4a.pt.x == 45);
-	assert(kp4a.pt.y == 54);
+	assert(kp4a.pt.x == 54);
+	assert(kp4a.pt.y == 45);
 	assert(fabs(kp4a.size - 3.45) < 0.0001);
 	assert(fabs(kp4a.angle - 90) < 0.0001);
 
 	cv::KeyPoint kp4b = keyPointList4->getContent()[1];
-	assert(kp4b.pt.x == 46);
-	assert(kp4b.pt.y == 64);
+	assert(kp4b.pt.x == 64);
+	assert(kp4b.pt.y == 46);
 	assert(fabs(kp4b.size - 5.43) < 0.0001);
 	cout << kp4b.angle << endl;
 	assert(fabs(kp4b.angle - 224) < 0.0001);

@@ -12,6 +12,8 @@ namespace uipfsfm {
 		public:
 			// color order: RGB
 			std::vector<cv::Scalar> colors;
+			// TODO implement
+			std::vector<cv::Vec3d> normals;
 
 			/*
 			 * @return a list of visualization options.

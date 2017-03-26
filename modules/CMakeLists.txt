@@ -38,6 +38,9 @@ target_link_libraries(SfMCopyImage ${ModuleBase} uipf-sfm)
 add_library(SfMLoadPointCloud SHARED io/SfMLoadPointCloud.cpp)
 target_link_libraries(SfMLoadPointCloud ${ModuleBase} uipf-sfm)
 
+add_library(SfMStorePointCloud SHARED io/SfMStorePointCloud.cpp)
+target_link_libraries(SfMStorePointCloud ${ModuleBase} uipf-sfm)
+
 
 #
 # Keypoints
@@ -87,6 +90,7 @@ install(TARGETS
 	SfMCopyImage
 
 	SfMLoadPointCloud
+	SfMStorePointCloud
 
 	# Keypoints
 	SfMFREAKModule

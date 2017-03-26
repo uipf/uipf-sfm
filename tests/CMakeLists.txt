@@ -27,4 +27,4 @@ message("libuipf: ${libuipf}")
 #message("libuipf-yaml: ${libuipf-yaml}")
 
 add_executable(KeyPointListTest KeyPointListTest.cpp)
-target_link_libraries(KeyPointListTest ${ModuleBase} ${libuipf} ${GLIBMM_LIBRARIES} ${Boost_LIBRARIES} opencv_core)
+target_link_libraries(KeyPointListTest ${ModuleBase} uipf-sfm ${libuipf} ${GLIBMM_LIBRARIES} ${Boost_LIBRARIES} opencv_core)
