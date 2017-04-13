@@ -1,3 +1,30 @@
+/**
+ * UIPF SfM
+ * Copyright (C) 2017 Carsten Brandt <mail@cebe.cc>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ ***************************************************************************************
+ *
+ *    NOTE THAT THIS PROGRAM USES OTHER CODE THAT IS PROTECTED BY PATENT!
+ *    You may not be allowed to use it without explicit permission!
+ *    Please refer to the following website for license details and contact information:
+ *    <http://www.vision.ee.ethz.ch/~surf/>
+ *
+ ***************************************************************************************
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "data/Image.hpp"
 
 #include <opencv2/features2d/features2d.hpp>
