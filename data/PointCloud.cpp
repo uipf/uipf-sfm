@@ -143,7 +143,7 @@ public:
 	};
 	std::vector<cv::Point3d> getVertices() { return vertices_; }
 	std::vector<cv::Scalar> getColors() { return colors_; }
-	std::vector<cv::Point3d> getNormals() { return normals_; }
+	std::vector<cv::Vec3d> getNormals() { return normals_; }
 private:
 	void info_callback(std::size_t line_number, const std::string& message) {
 		std::cerr << line_number << ": " << "info: " << message << std::endl;
@@ -175,10 +175,13 @@ private:
 				return std::tr1::bind(&ply_to_pointcloud::vertex_z, this, std::tr1::_Placeholder<1>());
 			}
 			if (property_name == "nx") {
+				hasNormal = true;
 				return std::tr1::bind(&ply_to_pointcloud::vertex_nx, this, std::tr1::_Placeholder<1>());
 			} else if (property_name == "ny") {
+				hasNormal = true;
 				return std::tr1::bind(&ply_to_pointcloud::vertex_ny, this, std::tr1::_Placeholder<1>());
 			} else if (property_name == "nz") {
+				hasNormal = true;
 				return std::tr1::bind(&ply_to_pointcloud::vertex_nz, this, std::tr1::_Placeholder<1>());
 			}
 		}
@@ -212,7 +215,7 @@ private:
 	void vertex_end() {
 		vertices_.push_back(cv::Point3d(vertex_x_, vertex_y_, vertex_z_));
 		if (hasNormal) {
-			normals_.push_back(cv::Point3d(vertex_nx_, vertex_ny_, vertex_nz_));
+			normals_.push_back(cv::Vec3d(vertex_nx_, vertex_ny_, vertex_nz_));
 		}
 		if (hasColor) {
 			colors_.push_back(cv::Scalar(vertex_red_, vertex_green_, vertex_blue_));
@@ -224,7 +227,7 @@ private:
 	bool hasColor = false;
 	ply::uint8 vertex_red_, vertex_green_, vertex_blue_;
 	std::vector<cv::Point3d> vertices_;
-	std::vector<cv::Point3d> normals_;
+	std::vector<cv::Vec3d> normals_;
 	std::vector<cv::Scalar> colors_;
 };
 
@@ -232,7 +235,6 @@ private:
 
 PointCloud::PointCloud(std::istream& s)
 {
-	// TODO read normals
 
 	ply_to_pointcloud p2p;
 	if (!p2p.convert(s)) {
@@ -240,6 +242,7 @@ PointCloud::PointCloud(std::istream& s)
 	}
 	setContent(p2p.getVertices());
 	colors = p2p.getColors();
+	normals = p2p.getNormals();
 
 }
 
